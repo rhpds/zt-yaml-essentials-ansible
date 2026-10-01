@@ -51,9 +51,10 @@ Let's create a simple playbook that tests connectivity to your hosts and then in
 [arabic]
 . Create a new playbook file in VSCode:
 +
-* In the VSCode Explorer pane, click the *New File* icon
-* Name the file `site.yml`
-* Add the following content:
+* In the left sidebar, hover over the `ansible-lab` folder name
+* Click the *New File* icon (page with a plus sign)
+* Type `site.yml` as the filename and press Enter
+* In the editor, add the following content:
 +
 [source,yaml]
 ----

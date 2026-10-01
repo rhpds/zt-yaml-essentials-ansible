@@ -23,9 +23,10 @@ Indentation errors are the #1 cause of YAML failures. Remember: YAML requires *e
 [arabic]
 . Create a new file in VSCode with an indentation error:
 +
-* In the VSCode Explorer pane, click the *New File* icon
-* Name the file `broken1.yml`
-* Add the following content:
+* In the left sidebar, hover over the `ansible-lab` folder
+* Click the *New File* icon (page with a plus sign)
+* Type `broken1.yml` as the filename and press Enter
+* In the editor, add the following content:
 +
 [source,yaml]
 ----
@@ -165,7 +166,11 @@ Most modern editors (VS Code, vim, nano) can do this.
 Variable names and keys are case-sensitive in YAML. `HTTP_PORT` and `http_port` are different variables.
 
 [arabic]
-. Create a new file in VSCode called `broken3.yml` with the following content:
+. Create a new file called `broken3.yml`:
++
+* Click the *New File* icon in the left sidebar
+* Name it `broken3.yml`
+* Add the following content:
 +
 [source,yaml]
 ----
@@ -237,7 +242,11 @@ ansible-playbook --check -i inventory.yml broken3.yml
 Variables in YAML values must be quoted if they start the value, but quoting rules can be tricky.
 
 [arabic]
-. Create a new file in VSCode called `broken4.yml` with the following content:
+. Create a new file called `broken4.yml`:
++
+* Click the *New File* icon in the left sidebar
+* Name it `broken4.yml`
+* Add the following content:
 +
 [source,yaml]
 ----
@@ -312,7 +321,11 @@ name: {{ package_name }}              # ❌ Error!
 YAML dictionaries require a colon (`:`) after each key. Forgetting the colon is a common typo.
 
 [arabic]
-. Create a new file in VSCode called `broken5.yml` with the following content:
+. Create a new file called `broken5.yml`:
++
+* Click the *New File* icon in the left sidebar
+* Name it `broken5.yml`
+* Add the following content:
 +
 [source,yaml]
 ----
@@ -458,7 +471,11 @@ When you encounter a YAML error, follow this process:
 Let's test what you've learned:
 
 [arabic]
-. Create a deliberately broken playbook in VSCode. Create a new file called `debug-challenge.yml` with the following content:
+. Create a deliberately broken playbook:
++
+* Click the *New File* icon in the left sidebar
+* Name it `debug-challenge.yml`
+* Add the following content:
 +
 [source,yaml]
 ----

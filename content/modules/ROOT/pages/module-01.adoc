@@ -40,18 +40,31 @@ Before we dive into YAML syntax, let's understand some fundamental rules:
 
 Let's start by creating a simple YAML inventory file. In Ansible, inventory files define the hosts (servers) you want to manage.
 
-[arabic]
-. In VSCode, create a new folder for your lab files:
-+
-* Click *File > Open Folder* (or *File > Open* on macOS)
-* Navigate to your home directory
-* Click *New Folder* and name it `ansible-lab`
-* Click *Open* to open this folder in VSCode
+[TIP]
+====
+*Using the Web-Based VSCode Editor:*
 
-. Create an empty inventory file:
+* Click the *VSCode Editor* tab to open the editor interface
+* The `ansible-lab` folder is already created and loaded for you
+* The left sidebar shows your files and folders
+* To create a file: hover over the folder name and click the *New File* icon (page with +)
+* To open a terminal: click *Terminal > New Terminal* in the top menu
+* Save files with *File > Save* or `Ctrl+S`
+====
+
+[arabic]
+. Click the *VSCode Editor* tab at the top of your lab interface to open the web-based editor.
 +
-* In the VSCode Explorer pane, click the *New File* icon
-* Name the file `inventory.yml`
+You should see VSCode open with the `ansible-lab` folder already loaded.
+
+. Create your first YAML file:
++
+* Look at the left sidebar - you'll see the file explorer showing the `ansible-lab` folder
+* Hover your mouse over the `ansible-lab` folder name
+* Click the *New File* icon (it looks like a page with a plus sign)
+* Type `inventory.yml` as the filename and press Enter
++
+A new empty file will open in the editor.
 
 == YAML Data Types
 
@@ -62,7 +75,7 @@ YAML has three fundamental data types that you'll use constantly in Ansible:
 Scalars are basic, single-value data types like strings, numbers, and booleans.
 
 [arabic]
-. Let's add some simple host entries to our inventory. In VSCode, open `inventory.yml` and add the following content:
+. Let's add some simple host entries to our inventory. In the left sidebar, click on `inventory.yml` to open it (if it's not already open), then add the following content:
 +
 [source,yaml]
 ----
@@ -72,14 +85,15 @@ web2.example.com
 db1.example.com
 ----
 +
-Save the file (*File > Save* or `Ctrl+S` / `Cmd+S`).
+Save the file by clicking *File > Save* in the top menu, or press `Ctrl+S` (Windows/Linux) or `Cmd+S` (Mac).
 
 . You should see three hostnames listed in your file. Each hostname is a *scalar* - a simple string value.
 
 . Verify the YAML syntax is valid using VSCode's integrated terminal:
 +
-* Open the terminal: *View > Terminal* (or `Ctrl+``)
-* Run the following command:
+* In VSCode, click the *Terminal* menu at the top, then select *New Terminal*
+* A terminal panel will open at the bottom of the screen
+* In the terminal, run the following command:
 +
 [source,bash,role=execute]
 ----
