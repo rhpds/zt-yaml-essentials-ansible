@@ -1,104 +1,177 @@
-=== Getting Started
+= YAML Essentials for Ansible
 
-* Create a git repo from this template
-* Clone the repo and *cd* into it
+A hands-on lab teaching YAML fundamentals through practical Ansible examples.
 
-=== Understanding the Basic Template Directory Structure
+== Lab Overview
 
-. Content Directory
-+
-.tree output
+This interactive workshop teaches developers, SREs, and platform engineers the fundamentals of YAML syntax and structure through building real Ansible inventories and playbooks.
+
+*Duration:* 40 minutes +
+*Experience Level:* Beginner +
+*Prerequisites:* None - no prior YAML or Ansible knowledge required
+
+=== Learning Objectives
+
+By the end of this lab, you will be able to:
+
+* Master YAML syntax: scalars, lists, dictionaries, and booleans
+* Create properly structured Ansible playbooks and inventories
+* Use variables and loops to make playbooks flexible
+* Write effective comments for documentation
+* Debug common YAML errors using `yamllint` and Ansible tools
+
+== Lab Modules
+
+=== Module 1: YAML Fundamentals (10 min)
+
+Learn basic YAML data types and create your first inventory file.
+
+* Scalars, lists, and dictionaries
+* Indentation rules (2 spaces, no tabs)
+* Case sensitivity
+* Create `inventory.yml` with host groups and variables
+
+=== Module 2: Your First Playbook (10 min)
+
+Write a working Ansible playbook with multiple tasks.
+
+* Playbook structure (`---`, `name`, `hosts`, `tasks`)
+* Execute tasks (ping, install packages, manage services)
+* Module parameters and FQCN (Fully Qualified Collection Names)
+* Boolean values (`become: true`)
+
+=== Module 3: Variables & Best Practices (10 min)
+
+Make playbooks flexible with variables and proper documentation.
+
+* Define variables in the `vars:` section
+* Use Jinja2 syntax: `"{{ variable_name }}"`
+* Loop over list variables
+* Add comments for documentation
+* Apply YAML best practices
+
+=== Module 4: Debugging YAML (10 min)
+
+Identify and fix common YAML errors.
+
+* Fix indentation problems
+* Catch tabs vs spaces issues
+* Debug case sensitivity errors
+* Handle quote requirements
+* Use `yamllint` and `ansible-playbook --syntax-check`
+
+== What You'll Build
+
+Throughout the lab, you'll create:
+
+* `~/ansible-lab/inventory.yml` - A structured inventory with webserver and database groups
+* `~/ansible-lab/site.yml` - A documented playbook that installs and configures Apache
+* Multiple example files demonstrating common errors and their fixes
+
+== Technical Details
+
+=== Environment
+
+* *Platform:* RHEL 9.5
+* *VM:* 1 instance (`host1`)
+* *Tools:* Ansible, yamllint, Python
+* *Access:* Terminal, YAML spec reference, Ansible docs
+
+=== Repository Structure
+
 [source,shell]
 ----
 .
-├── README.adoc                 # Readme file
-├── config                      # Defines VMs, network and firewall
-├── runtime-automation          # Scripts directory for setup/next/solve modules 
-├── setup-automation            # Scripts directory when provisioning
-├── ui-config.yml               # Configuration file
-├── site.yml                    # Theme config
-└── content                     # Content directory
-    ├── antora.yml              # Antora configuration file. You can add "inline vars" here to render within your content
+├── README.adoc                 # This file
+├── config                      # VM, network, and firewall definitions
+├── runtime-automation          # Module setup/solve/validation scripts
+├── setup-automation            # Provisioning scripts
+├── ui-config.yml               # Lab UI configuration
+├── site.yml                    # Antora theme configuration
+└── content                     # Lab content
+    ├── antora.yml              # Antora configuration
     └── modules/ROOT
         ├── assets
-        │   └── images                       # Images used in your content 
-        │       └── example-image.png
-        ├── pages                            # Your content goes here
-        │   ├── module-01.adoc               # First module of your lab, e.g. overview etc 
-        │   ├── module-02.adoc               # Second module of your lab  
-        │   └── module-03.adoc               # Third module
+        │   └── images
+        ├── pages
+        │   ├── module-01.adoc  # YAML Fundamentals
+        │   ├── module-02.adoc  # Your First Playbook
+        │   ├── module-03.adoc  # Variables & Best Practices
+        │   └── module-04.adoc  # Debugging YAML
 ----
 
-. Lab definition directory
-+
-.tree output
-[source,shell]
+== Development
+
+=== Local Development
+
+[source,bash]
 ----
-config/
-├── firewall.yaml                           # Define the egress/ingress rules to be allowed
-├── instances.yaml                          # Define the instances to be created
-└── networks.yml                            # Define the networks to be created
+# Clone the repository
+git clone https://github.com/rhpds/zt-yaml-essentials-ansible.git
+cd zt-yaml-essentials-ansible
+
+# Edit content
+vim content/modules/ROOT/pages/module-01.adoc
+
+# Commit and push
+git add .
+git commit -m "Update module content"
+git push
 ----
 
+=== Module Configuration
 
-. Runtime Scripts Directory Structure
-+
-.tree output
-[source,shell]
-----
-runtime-automation/
-├── module_1                            # The directory name should be the same as 
-│                                       # the module content page name
-│   ├── setup.sh                        # Setup playbook which run at start of module 
-│                                       # and when clicked on next button
-│   ├── solve.sh                        # Solve playbook, run when clicked on solve button
-│   └── validation.sh                   # Validation playbook, run when click on next button
-├── ansible.cfg                         # Ansible configuration used with module playbooks
-└── main.yml                            # Playbook to be called in each step
-----
+Modules are configured in `ui-config.yml`:
 
-. Setup Scripts Directory Structure
-+
-.tree output
-[source,shell]
-----
-setup-automation/
-├── setup-vmname.sh                     # Script to be executed on vmname when is provisioned
-├── ansible.cfg                         # Ansible configuration used with module playbooks
-└── main.yml                            # Playbook to be called in each step
-----
-
-
-== Understanding UI Configration file
-. Example: The *ui-config.yml* configuration file
-+
-.tree output
-[source,shell]
+[source,yaml]
 ----
 antora:
   name: modules
   dir: www
   modules:
-    - name: 01-playbook-inventory               # Module Name
-      label: Playbook Inventory                 # Module Label
-      solveButton: true                         # Enable Solve button
-    - name: 02-playbook-directory-structure
-      label: Playbook Directory Structure
+    - name: module-01
+      label: "YAML Fundamentals"
       solveButton: true
-tabs:
-  - name: VSCode Editor                         # Tab name
-    port: 8443                                  # Port no of the service
-    path: /?folder=/home/rhel/ansible-files/    # Path suffix
-  - name: ">_control"                           # Tab name
-    port: 443                                   # Port of the tt1 terminal
-    path: /tty1                                 # Path to the tty1 terminal
+    - name: module-02
+      label: "Your First Playbook"
+      solveButton: true
+    - name: module-03
+      label: "Variables & Best Practices"
+      solveButton: true
+    - name: module-04
+      label: "Debugging YAML"
+      solveButton: true
 ----
 
-=== Development Cycle
+== Business Scenario
 
-. Edit your content in `content/modules/ROOT/pages/`
-. Use `git` to branch and commit your work
-. Push your work to your repo
-.. You should use `git tags` or `git branches` in production
-.. However development items default to the head of `main`
+*TechStart Inc.* is a growing technology company modernizing their infrastructure. Their operations team needs to automate the deployment of web servers across their RHEL fleet using Ansible. Before writing complex automation, the team must first master YAML - the foundation of all Ansible content.
 
+This lab provides the essential YAML skills needed to write clear, maintainable Ansible playbooks.
+
+== Key Takeaways
+
+After completing this lab, learners will understand:
+
+* ✅ YAML syntax rules: indentation, case sensitivity, data types
+* ✅ How to structure Ansible inventories and playbooks
+* ✅ Variable usage and Jinja2 templating basics
+* ✅ YAML best practices for maintainability
+* ✅ Debugging techniques for common YAML errors
+
+== Next Steps
+
+Upon completion, learners can:
+
+* Explore more Ansible modules at https://docs.ansible.com
+* Learn about Ansible roles and includes
+* Study Ansible Automation Platform features
+* Build playbooks for their own infrastructure needs
+
+== Support
+
+For issues or questions:
+
+* RHDP Support: https://red.ht/rhdp-help
+* Ansible Documentation: https://docs.ansible.com
+* YAML Specification: https://yaml.org

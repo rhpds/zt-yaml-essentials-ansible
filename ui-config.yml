@@ -5,17 +5,24 @@ antora:
   dir: www
   modules:
     - name: module-01
-      label: "Writing your lab"
+      label: "YAML Fundamentals"
       solveButton: true
     - name: module-02
-      label: "Antora"
+      label: "Your First Playbook"
       solveButton: true
     - name: module-03
-      label: "Tabs"
+      label: "Variables & Best Practices"
+      solveButton: true
+    - name: module-04
+      label: "Debugging YAML"
+      solveButton: true
 
 tabs:
   - name: ">_ terminal"
     url: /wetty
-  - name: "Asciidoc Doc"
-    url: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
+  - name: "YAML Spec"
+    url: https://yaml.org/spec/1.2.2/
+    external: true
+  - name: "Ansible Docs"
+    url: https://docs.ansible.com/ansible/latest/index.html
     external: true

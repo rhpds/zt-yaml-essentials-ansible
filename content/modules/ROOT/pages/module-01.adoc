@@ -1,39 +1,277 @@
-= Writing your lab
+= YAML Fundamentals
 
-== Variables
+== Introduction
 
-The `lab_name` var, known as an asciidoc attribute, is set in `site.yml` and can be used to set the lab_name (Example: {lab_name}) or title of your content.
-They are both free to change its value and if you prefer to use a different var name, you can change the value of `lab_name`, for example to `title` in `site.yml` and then reference it in your content as `\{site-title}` (Ex: {site-title}).
+Welcome to YAML Essentials for Ansible! In this lab, you'll learn the fundamentals of YAML (YAML Ain't Markup Language), a human-readable data serialization language that Ansible uses for all its configurations, playbooks, and tasks.
 
-Example:
-[source,asciidoc]
+*YAML (YAML Ain't Markup Language)* is a data serialization standard that makes it easy to read and understand code at a glance. Ansible Automation Platform uses YAML because it offers a straightforward, human-readable way to write configurations, tasks, and playbooks.
+
+In this module, you will:
+
+* Learn basic YAML data types: scalars, lists, and dictionaries
+* Understand YAML indentation and structure rules
+* Create your first YAML inventory file
+* Master case sensitivity in YAML
+
+=== Why YAML for Ansible?
+
+YAML offers several advantages for automation:
+
+* *Readability:* YAML's structure makes it simple for users of all skill levels to understand and write Ansible content
+* *Support for complex use cases:* YAML can represent lists and dictionaries, allowing complex configurations with simplicity
+* *Wide adoption:* YAML skills are transferable across many configuration management tools
+* *Low learning curve:* YAML's easy syntax lowers the barrier to getting started with Ansible
+
+== YAML File Basics
+
+Before we dive into YAML syntax, let's understand some fundamental rules:
+
+[IMPORTANT]
+====
+*Critical YAML Rules:*
+
+* YAML files typically use the `.yml` or `.yaml` extension
+* YAML is *case-sensitive* - `Name` and `name` are different
+* Use *2 spaces* for indentation (never tabs!)
+* Files often start with `---` to indicate the beginning of a YAML document
+====
+
+=== Creating Your First YAML File
+
+Let's start by creating a simple YAML inventory file. In Ansible, inventory files define the hosts (servers) you want to manage.
+
+[arabic]
+. First, let's create a directory for our lab files:
++
+[source,bash,role=execute]
 ----
-{my_var}
+mkdir -p ~/ansible-lab
+cd ~/ansible-lab
 ----
 
-Variable rendered:
-
-{my_var}
-
-== Inserting Images
-
-To display an image in your Antora documentation, place the image file in the `assets/images/` folder of the module, then reference it using the `image::[]` macro
-
-=== Basic Syntax
-
-[source,asciidoc]
+. Create an empty inventory file:
++
+[source,bash,role=execute]
 ----
-image::example-image.png[Example Image, width=100, height=100]
+touch inventory.yml
 ----
 
-This will render the `example-image.png` image as it follows:
+== YAML Data Types
 
-image::example-image.png[Example Image, width=100, height=100]
+YAML has three fundamental data types that you'll use constantly in Ansible:
 
-=== Understanding the Antora Configuration
+=== Scalars (Simple Values)
 
-This lab explains the purpose and structure of the YAML configuration used in an Antora-based documentation site.
+Scalars are basic, single-value data types like strings, numbers, and booleans.
 
-=== Basic Structure
+[arabic]
+. Let's add some simple host entries to our inventory. Open the file in an editor:
++
+[source,bash,role=execute]
+----
+cat > ~/ansible-lab/inventory.yml << 'EOF'
+---
+web1.example.com
+web2.example.com
+db1.example.com
+EOF
+----
 
-The configuration is written in YAML `ui-config.yml` and includes two main sections: `antora` and `tabs`. Click next to know more.
+. View your inventory file:
++
+[source,bash,role=execute]
+----
+cat ~/ansible-lab/inventory.yml
+----
++
+You should see three hostnames listed. Each hostname is a *scalar* - a simple string value.
+
+. Verify the YAML syntax is valid:
++
+[source,bash,role=execute]
+----
+yamllint ~/ansible-lab/inventory.yml
+----
+
+[TIP]
+====
+*Strings in YAML:*
+
+Quotation marks are optional for most strings in YAML. As a best practice for Ansible, avoid using quotation marks unless necessary (e.g., when a string contains special characters).
+====
+
+=== Lists (Sequences)
+
+Lists define collections of items and are identified by leading hyphens (`-`). Ansible uses lists to specify multiple items under a key.
+
+Let's expand our inventory to use proper list syntax:
+
+[arabic]
+. Update the inventory file with list syntax:
++
+[source,bash,role=execute]
+----
+cat > ~/ansible-lab/inventory.yml << 'EOF'
+---
+hosts:
+  - web1.example.com
+  - web2.example.com
+  - db1.example.com
+EOF
+----
+
+. View the updated file:
++
+[source,bash,role=execute]
+----
+cat ~/ansible-lab/inventory.yml
+----
++
+Notice how each hostname now starts with a hyphen (`-`) and is indented with 2 spaces under the `hosts:` key.
+
+. Verify the syntax:
++
+[source,bash,role=execute]
+----
+yamllint ~/ansible-lab/inventory.yml
+----
+
+=== Dictionaries (Key-Value Pairs)
+
+Dictionaries associate keys with values. They're used throughout Ansible for configurations, variables, and module parameters.
+
+Let's create a proper inventory with host groups:
+
+[arabic]
+. Update your inventory to use dictionaries and nested structures:
++
+[source,bash,role=execute]
+----
+cat > ~/ansible-lab/inventory.yml << 'EOF'
+---
+all:
+  children:
+    webservers:
+      hosts:
+        web1.example.com:
+        web2.example.com:
+    databases:
+      hosts:
+        db1.example.com:
+EOF
+----
+
+. View the structured inventory:
++
+[source,bash,role=execute]
+----
+cat ~/ansible-lab/inventory.yml
+----
++
+This inventory now has:
+* `all:` - A top-level dictionary key
+* `children:` - A nested dictionary defining groups
+* `webservers:` and `databases:` - Group names (dictionary keys)
+* `hosts:` - Another nested dictionary containing host lists
+
+. Verify with Ansible:
++
+[source,bash,role=execute]
+----
+ansible-inventory -i ~/ansible-lab/inventory.yml --list
+----
++
+This command shows how Ansible interprets your YAML inventory structure.
+
+[NOTE]
+====
+*Understanding Indentation:*
+
+Notice the structure uses 2 spaces per level:
+
+* `all:` - 0 spaces (top level)
+* `children:` - 2 spaces (nested under `all`)
+* `webservers:` - 4 spaces (nested under `children`)
+* `hosts:` - 6 spaces (nested under `webservers`)
+
+Consistent indentation is critical in YAML!
+====
+
+== Case Sensitivity in YAML
+
+YAML is case-sensitive, which means `HTTP_PORT` and `http_port` are completely different keys.
+
+Let's add some host variables to demonstrate:
+
+[arabic]
+. Add variables to one of your hosts:
++
+[source,bash,role=execute]
+----
+cat > ~/ansible-lab/inventory.yml << 'EOF'
+---
+all:
+  children:
+    webservers:
+      hosts:
+        web1.example.com:
+          http_port: 80
+          max_clients: 200
+        web2.example.com:
+          http_port: 8080
+          max_clients: 150
+    databases:
+      hosts:
+        db1.example.com:
+          db_port: 5432
+EOF
+----
+
+. Verify the inventory structure:
++
+[source,bash,role=execute]
+----
+ansible-inventory -i ~/ansible-lab/inventory.yml --list --yaml
+----
++
+Notice how each host now has variables associated with it. The variable names use consistent casing throughout.
+
+[WARNING]
+====
+*Common Mistake - Inconsistent Casing:*
+
+If you use `http_port` in one place and `HTTP_PORT` in another, Ansible will treat them as different variables. This is a common source of errors!
+====
+
+=== Verify Your Work
+
+Let's create a quick test to ensure your inventory is valid:
+
+[arabic]
+. Test that Ansible can read all hosts in the webservers group:
++
+[source,bash,role=execute]
+----
+ansible webservers -i ~/ansible-lab/inventory.yml --list-hosts
+----
+
+. Test the databases group:
++
+[source,bash,role=execute]
+----
+ansible databases -i ~/ansible-lab/inventory.yml --list-hosts
+----
+
+== Key Takeaways
+
+In this module, you learned:
+
+* ✅ YAML uses `.yml` extension and often starts with `---`
+* ✅ YAML is *case-sensitive* - maintain consistent casing
+* ✅ Use *2 spaces* for indentation (never tabs)
+* ✅ *Scalars* are simple values (strings, numbers)
+* ✅ *Lists* use leading hyphens (`-`) to define sequences
+* ✅ *Dictionaries* use `key: value` pairs for structured data
+* ✅ Nested structures use consistent indentation
+
+You've created a valid Ansible inventory file with hosts, groups, and variables. In the next module, you'll write your first playbook using this inventory!

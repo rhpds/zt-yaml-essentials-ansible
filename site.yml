@@ -1,15 +1,16 @@
 ---
 site:
-  title: "Change me, your title lives as site.title in site.yml"
-  url: https://github.com/rhpds/showroom_template_zero
+  title: "YAML Essentials for Ansible"
+  url: https://github.com/rhpds/zt-yaml-essentials-ansible
   start_page: modules::module-01.adoc
 
 asciidoc:
   attributes:
-    lab_name: "I'm the lab_name var"
+    lab_name: "YAML Essentials for Ansible"
     release-version: master
     page-pagination: true
-    my_var: "foo - this is an asciidoc attribute from `site.yml`"
+    duration: "40 minutes"
+    audience: "Developers, SREs, Platform Engineers"
 
 content:
   sources:

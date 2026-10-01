@@ -1,29 +1,381 @@
-= Tabs
+= Variables & Best Practices
+
+== Introduction
+
+Variables make your Ansible playbooks flexible and reusable. Instead of hardcoding values throughout your playbook, you define them once and reference them wherever needed.
+
+In this module, you will:
+
+* Learn how to define variables in playbooks
+* Use variables in tasks with Jinja2 syntax
+* Write effective comments for documentation
+* Apply YAML best practices
+
+== Why Use Variables?
+
+Variables provide several benefits:
+
+* *Reusability:* Change a value once instead of in multiple places
+* *Flexibility:* Easily customize playbooks for different environments
+* *Readability:* Meaningful variable names make code self-documenting
+* *Maintainability:* Centralize configuration values
+
+== Defining Variables
+
+In Ansible playbooks, you define variables in the `vars:` section, which is a dictionary of key-value pairs.
+
+=== Adding Variables to Your Playbook
+
+Let's refactor the playbook from Module 2 to use variables:
+
+[arabic]
+. Update your playbook to include a vars section:
++
+[source,bash,role=execute]
+----
+cat > ~/ansible-lab/site.yml << 'EOF'
+---
+- name: Configure web servers
+  hosts: webservers
+  become: true
+  vars:
+    web_package: httpd
+    web_service: httpd
+    http_port: 80
+
+  tasks:
+    - name: Ping all web servers
+      ansible.builtin.ping:
+
+    - name: Install web server package
+      ansible.builtin.package:
+        name: "{{ web_package }}"
+        state: present
+
+    - name: Start and enable web service
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: started
+        enabled: true
+EOF
+----
+
+. View the updated playbook:
++
+[source,bash,role=execute]
+----
+cat ~/ansible-lab/site.yml
+----
+
+Notice the changes:
+
+* `vars:` section defines three variables
+* Variables use `{{ variable_name }}` syntax (Jinja2 template syntax)
+* Task names are more generic since the actual package name is in the variable
+
+[IMPORTANT]
+====
+*Variable Syntax - Jinja2 Templates:*
+
+When using variables in YAML values, you must use quotes around the entire value if it starts with a variable:
+
+*Correct:*
+[source,yaml]
+----
+name: "{{ web_package }}"     # ✅ Quoted
+----
+
+*Wrong:*
+[source,yaml]
+----
+name: {{ web_package }}        # ❌ YAML parser error!
+----
+
+The quotes tell the YAML parser this is a string, then Ansible evaluates the Jinja2 template inside.
+====
+
+=== Variable Naming Conventions
+
+Follow these best practices for variable names:
+
+* Use lowercase with underscores: `http_port`, `max_clients`
+* Make names descriptive: `web_package` not `pkg`
+* Avoid starting with numbers: `port_80` not `80_port`
+* Be consistent with casing throughout your playbook
+
+=== Verify Variables Work
+
+[arabic]
+. Check the playbook syntax:
++
+[source,bash,role=execute]
+----
+ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+----
+
+. Run in check mode to see how variables are evaluated:
++
+[source,bash,role=execute]
+----
+ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+----
+
+== Using Variables with Lists
+
+Variables can also be lists, which is useful when you need to install multiple packages or perform similar actions on multiple items.
+
+=== Looping Over Variables
+
+[arabic]
+. Update your playbook to install multiple packages:
++
+[source,bash,role=execute]
+----
+cat > ~/ansible-lab/site.yml << 'EOF'
+---
+- name: Configure web servers
+  hosts: webservers
+  become: true
+  vars:
+    web_packages:
+      - httpd
+      - mod_ssl
+      - firewalld
+    web_service: httpd
+    http_port: 80
+
+  tasks:
+    - name: Ping all web servers
+      ansible.builtin.ping:
+
+    - name: Install web server packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ web_packages }}"
+
+    - name: Start and enable web service
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: started
+        enabled: true
+EOF
+----
+
+. Notice the new syntax:
++
+[source,bash,role=execute]
+----
+cat ~/ansible-lab/site.yml | grep -A 5 "web_packages:"
+----
++
+The `web_packages` variable is now a list (using `-` for each item), and we use `loop:` to iterate over it.
+
+[NOTE]
+====
+*The `loop` Keyword:*
+
+The `loop:` keyword tells Ansible to repeat the task for each item in the list. The special variable `{{ item }}` represents the current item in each iteration.
+
+This installs each package in the list one by one.
+====
+
+== Adding Comments
+
+Comments make your YAML files more maintainable by explaining why decisions were made, documenting complex logic, or marking TODOs.
+
+=== Comment Syntax
+
+YAML comments begin with `#`. Everything after `#` on a line is ignored:
 
 [source,yaml]
 ----
-tabs:
-  - name: ">_ terminal"
-    type: "terminal"
-  - name: "Asciidoc Doc"
-    url: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
-    external: true
+# This is a full-line comment
+vars:
+  http_port: 80  # This is an inline comment
 ----
 
-=== Explanation
+=== Effective Comments
 
-- `name`: The label that appears on the tab in the UI.
-- `type`: Defines the tab layout. Options include:
-  - `terminal`: For a single terminal-like block.
-  - `double-terminal`: For a side-by-side terminal view.
-- `url`: Used to link to an external page.
-- `path`: (If no url is defined) The base path where the service will be served, e.g., `/tty`.
-- `port`: (If no url is defined) The port where the service will be served, e.g., `3000`.
-- `external`: If `true`, the link opens in a new tab/window.
+Let's add documentation comments to the playbook:
 
-== Resulting UI
+[arabic]
+. Add meaningful comments:
++
+[source,bash,role=execute]
+----
+cat > ~/ansible-lab/site.yml << 'EOF'
+---
+# site.yml - Web Server Configuration Playbook
+#
+# This playbook configures Apache web servers with SSL support
+# and firewall configuration for the TechStart Inc. infrastructure.
+#
+# Target: webservers group from inventory
+# Requirements: RHEL 9 with network connectivity
 
-You might see two tabs in your UI:
-- A terminal emulator style display
-- A link to AsciiDoc syntax reference
+- name: Configure web servers
+  hosts: webservers
+  become: true  # Required for package installation and service management
 
+  vars:
+    # Package list includes Apache, SSL module, and firewall
+    web_packages:
+      - httpd        # Apache web server
+      - mod_ssl      # SSL/TLS support
+      - firewalld    # Firewall management
+
+    web_service: httpd
+    http_port: 80    # Standard HTTP port
+
+  tasks:
+    # Connectivity test - ensures Ansible can reach all hosts
+    - name: Ping all web servers
+      ansible.builtin.ping:
+
+    # Install all required packages in a single task
+    - name: Install web server packages
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ web_packages }}"
+
+    # Ensure web service is running and enabled at boot
+    - name: Start and enable web service
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: started
+        enabled: true  # Start automatically on system boot
+EOF
+----
+
+. View the documented playbook:
++
+[source,bash,role=execute]
+----
+cat ~/ansible-lab/site.yml
+----
+
+[TIP]
+====
+*When to Add Comments:*
+
+* Document the *purpose* of the playbook at the top
+* Explain *why* configuration choices were made
+* Clarify *complex* logic or non-obvious behavior
+* Mark sections as *TODO* for future work
+* Document *requirements* or *prerequisites*
+
+Don't comment the obvious:
+[source,yaml]
+----
+- name: Install httpd
+  ansible.builtin.package:
+    name: httpd      # Installs httpd  ❌ Task name already says this!
+----
+====
+
+=== Comment Best Practices
+
+[cols="1,2",options="header"]
+|===
+|Practice |Example
+
+|Document why, not what
+|`# Using port 8080 to avoid conflict with existing service`
+
+|Keep comments up-to-date
+|Update comments when you change code
+
+|Use comments for playbook headers
+|Document purpose, author, requirements
+
+|Explain complex variable structures
+|Describe what nested dictionaries represent
+
+|Mark TODOs
+|`# TODO: Add SSL certificate configuration`
+|===
+
+== YAML Best Practices Summary
+
+Here are the key best practices you've learned:
+
+[arabic]
+. *Start files with `---`* to mark YAML document beginning
+. *Use 2 spaces for indentation* - never tabs
+. *Maintain consistent casing* in variable names
+. *Quote strings that start with variables* - `"{{ var }}"`
+. *Use descriptive variable names* - `web_package` not `pkg`
+. *Add meaningful comments* for documentation
+. *Use `true`/`false`* for boolean values
+. *Avoid unnecessary quotes* on simple strings
+. *Keep playbooks readable* with blank lines between sections
+
+=== Verify Your Work
+
+Let's ensure your documented playbook still works correctly:
+
+[arabic]
+. Syntax check:
++
+[source,bash,role=execute]
+----
+ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+----
+
+. Verify yamllint is happy:
++
+[source,bash,role=execute]
+----
+yamllint ~/ansible-lab/site.yml
+----
+
+. Check that variables are defined:
++
+[source,bash,role=execute]
+----
+grep -E "^  vars:" ~/ansible-lab/site.yml && echo "✅ vars section found"
+----
+
+. Count your comments:
++
+[source,bash,role=execute]
+----
+grep -c "^#\|  #" ~/ansible-lab/site.yml
+----
+
+. View the final playbook structure:
++
+[source,bash,role=execute]
+----
+cat ~/ansible-lab/site.yml
+----
+
+== More Boolean Examples
+
+You've seen `become: true` and `enabled: true`. Here are other common boolean uses in Ansible:
+
+[source,yaml]
+----
+gather_facts: false        # Skip automatic fact gathering
+check_mode: true          # Run in dry-run mode
+ignore_errors: true       # Continue even if task fails
+changed_when: false       # Never report as "changed"
+----
+
+== Key Takeaways
+
+In this module, you learned:
+
+* ✅ Define variables in the `vars:` section as key-value pairs
+* ✅ Reference variables with `"{{ variable_name }}"` syntax
+* ✅ Quote strings that start with variables
+* ✅ Use lists for variables with multiple values
+* ✅ Use `loop:` to iterate over list variables
+* ✅ Add comments with `#` for documentation
+* ✅ Follow naming conventions: lowercase with underscores
+* ✅ Use `true`/`false` for boolean values
+* ✅ Document why, not what, in comments
+
+Your playbook is now flexible, well-documented, and follows Ansible best practices! In the next module, you'll learn how to debug common YAML errors and troubleshoot syntax issues.
