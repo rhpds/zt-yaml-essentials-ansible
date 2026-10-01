@@ -2,3 +2,9 @@
 
 name: modules
 version: master
+
+asciidoc:
+  attributes:
+    lab_name: "YAML Essentials For Ansible Automation Platform"
+    release-version: master
+    page-pagination: true
