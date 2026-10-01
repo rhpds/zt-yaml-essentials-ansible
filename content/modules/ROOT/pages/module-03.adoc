@@ -29,11 +29,10 @@ In Ansible playbooks, you define variables in the `vars:` section, which is a di
 Let's refactor the playbook from Module 2 to use variables:
 
 [arabic]
-. Update your playbook to include a vars section:
+. Update `site.yml` in VSCode to include a vars section. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/site.yml << 'EOF'
 ---
 - name: Configure web servers
   hosts: webservers
@@ -57,17 +56,11 @@ cat > ~/ansible-lab/site.yml << 'EOF'
         name: "{{ web_service }}"
         state: started
         enabled: true
-EOF
 ----
-
-. View the updated playbook:
 +
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/site.yml
-----
+Save the file.
 
-Notice the changes:
+. Notice the changes:
 
 * `vars:` section defines three variables
 * Variables use `{{ variable_name }}` syntax (Jinja2 template syntax)
@@ -106,18 +99,18 @@ Follow these best practices for variable names:
 === Verify Variables Work
 
 [arabic]
-. Check the playbook syntax:
+. Check the playbook syntax in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
 . Run in check mode to see how variables are evaluated:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --check -i inventory.yml site.yml
 ----
 
 == Using Variables with Lists
@@ -127,11 +120,10 @@ Variables can also be lists, which is useful when you need to install multiple p
 === Looping Over Variables
 
 [arabic]
-. Update your playbook to install multiple packages:
+. Update `site.yml` in VSCode to install multiple packages. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/site.yml << 'EOF'
 ---
 - name: Configure web servers
   hosts: webservers
@@ -159,17 +151,11 @@ cat > ~/ansible-lab/site.yml << 'EOF'
         name: "{{ web_service }}"
         state: started
         enabled: true
-EOF
 ----
++
+Save the file.
 
-. Notice the new syntax:
-+
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/site.yml | grep -A 5 "web_packages:"
-----
-+
-The `web_packages` variable is now a list (using `-` for each item), and we use `loop:` to iterate over it.
+. The `web_packages` variable is now a list (using `-` for each item), and we use `loop:` to iterate over it.
 
 [NOTE]
 ====
@@ -200,11 +186,10 @@ vars:
 Let's add documentation comments to the playbook:
 
 [arabic]
-. Add meaningful comments:
+. Add meaningful comments to `site.yml` in VSCode. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/site.yml << 'EOF'
 ---
 # site.yml - Web Server Configuration Playbook
 #
@@ -246,15 +231,9 @@ cat > ~/ansible-lab/site.yml << 'EOF'
         name: "{{ web_service }}"
         state: started
         enabled: true  # Start automatically on system boot
-EOF
 ----
-
-. View the documented playbook:
 +
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/site.yml
-----
+Save the file.
 
 [TIP]
 ====
@@ -314,42 +293,35 @@ Here are the key best practices you've learned:
 
 === Verify Your Work
 
-Let's ensure your documented playbook still works correctly:
+Let's ensure your documented playbook still works correctly using the integrated terminal:
 
 [arabic]
 . Syntax check:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
 . Verify yamllint is happy:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/site.yml
+yamllint site.yml
 ----
 
 . Check that variables are defined:
 +
 [source,bash,role=execute]
 ----
-grep -E "^  vars:" ~/ansible-lab/site.yml && echo "✅ vars section found"
+grep -E "^  vars:" site.yml && echo "✅ vars section found"
 ----
 
 . Count your comments:
 +
 [source,bash,role=execute]
 ----
-grep -c "^#\|  #" ~/ansible-lab/site.yml
-----
-
-. View the final playbook structure:
-+
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/site.yml
+grep -c "^#\|  #" site.yml
 ----
 
 == More Boolean Examples

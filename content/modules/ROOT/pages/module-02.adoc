@@ -49,28 +49,25 @@ Let's create a simple playbook that tests connectivity to your hosts and then in
 === The Ping Playbook
 
 [arabic]
-. Create a new playbook file:
+. Create a new playbook file in VSCode:
 +
-[source,bash,role=execute]
+* In the VSCode Explorer pane, click the *New File* icon
+* Name the file `site.yml`
+* Add the following content:
++
+[source,yaml]
 ----
-cat > ~/ansible-lab/site.yml << 'EOF'
 ---
 - name: Test connectivity to web servers
   hosts: webservers
   tasks:
     - name: Ping all web servers
       ansible.builtin.ping:
-EOF
 ----
++
+Save the file.
 
-. Let's examine the structure:
-+
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/site.yml
-----
-+
-Notice the key elements:
+. Notice the key elements:
 * `---` starts the YAML document
 * `- name:` defines the play (note the leading hyphen - this is a list!)
 * `hosts: webservers` targets the webservers group from your inventory
@@ -78,14 +75,14 @@ Notice the key elements:
 * `- name: Ping all web servers` describes the task
 * `ansible.builtin.ping:` is the module to execute
 
-. Verify the playbook syntax:
+. Verify the playbook syntax in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 +
-If the syntax is correct, you'll see: `playbook: /home/.../site.yml`
+If the syntax is correct, you'll see: `playbook: site.yml`
 
 [NOTE]
 ====
@@ -96,14 +93,14 @@ The `ansible.builtin.ping` module tests connectivity to hosts. It's not an ICMP 
 
 === Running Your Playbook
 
-Now let's execute the playbook:
+Now let's execute the playbook using the integrated terminal:
 
 [arabic]
 . Run the playbook in check mode first (dry run):
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --check -i inventory.yml site.yml
 ----
 +
 Check mode shows what would happen without making changes.
@@ -112,7 +109,7 @@ Check mode shows what would happen without making changes.
 +
 [source,bash,role=execute]
 ----
-ansible-playbook -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook -i inventory.yml site.yml
 ----
 +
 You should see output showing each task executing and whether it succeeded.
@@ -144,11 +141,10 @@ ansible.builtin.package:
 === Adding the Installation Task
 
 [arabic]
-. Update your playbook to include package installation:
+. Update `site.yml` in VSCode to include package installation. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/site.yml << 'EOF'
 ---
 - name: Configure web servers
   hosts: webservers
@@ -167,28 +163,22 @@ cat > ~/ansible-lab/site.yml << 'EOF'
         name: httpd
         state: started
         enabled: true
-EOF
 ----
++
+Save the file.
 
-. Let's examine the new elements:
-+
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/site.yml
-----
-+
-New elements:
+. New elements:
 * `become: true` - Execute tasks with elevated privileges (sudo)
 * Multiple tasks in the `tasks:` list (each starts with `-`)
 * Module parameters indented under the module name
 * `state: present` tells the package module to install if not present
 * `state: started` tells the service module to start the service
 
-. Verify the syntax:
+. Verify the syntax in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
 [WARNING]
@@ -277,35 +267,28 @@ ansible-doc ansible.builtin.package
 
 === Verify Your Work
 
-Let's test your playbook:
+Let's test your playbook using the integrated terminal:
 
 [arabic]
 . Run a syntax check:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
 . Check the playbook in dry-run mode:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
-----
-
-. View the complete playbook structure:
-+
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/site.yml
+ansible-playbook --check -i inventory.yml site.yml
 ----
 
 . Count the number of tasks:
 +
 [source,bash,role=execute]
 ----
-grep -c "^    - name:" ~/ansible-lab/site.yml
+grep -c "^    - name:" site.yml
 ----
 +
 You should see `3` (three tasks).

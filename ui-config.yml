@@ -6,20 +6,24 @@ antora:
   modules:
     - name: module-01
       label: "YAML Fundamentals"
+      scripts: [setup, solve, validation]
       solveButton: true
     - name: module-02
       label: "Your First Playbook"
+      scripts: [setup, solve, validation]
       solveButton: true
     - name: module-03
       label: "Variables & Best Practices"
+      scripts: [setup, solve, validation]
       solveButton: true
     - name: module-04
       label: "Debugging YAML"
+      scripts: [setup, solve, validation]
       solveButton: true
 
 tabs:
   - name: VSCode Editor
-    url: https://vscode-${guid}.${domain}/?folder=/home/rhel/ansible-files/
+    url: https://vscode-${guid}.${domain}/?folder=/home/rhel/ansible-lab/
   - name: "Control"
     port: 443
     path: /tty1

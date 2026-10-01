@@ -21,11 +21,14 @@ Let's explore the most frequent YAML mistakes and learn how to fix them.
 Indentation errors are the #1 cause of YAML failures. Remember: YAML requires *exactly 2 spaces* per level.
 
 [arabic]
-. Create a file with an indentation error:
+. Create a new file in VSCode with an indentation error:
 +
-[source,bash,role=execute]
+* In the VSCode Explorer pane, click the *New File* icon
+* Name the file `broken1.yml`
+* Add the following content:
++
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken1.yml << 'EOF'
 ---
 - name: Broken indentation example
   hosts: webservers
@@ -35,23 +38,23 @@ cat > ~/ansible-lab/broken1.yml << 'EOF'
    - name: This task has wrong indentation
      ansible.builtin.debug:
        msg: "Wrong indent"
-EOF
 ----
++
+Save the file.
 
-. Try to check the syntax:
+. Try to check the syntax in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/broken1.yml
+yamllint broken1.yml
 ----
 +
 You'll see errors about indentation!
 
-. Now fix the file with correct indentation:
+. Now fix the file with correct indentation in VSCode. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken1.yml << 'EOF'
 ---
 - name: Fixed indentation example
   hosts: webservers
@@ -62,14 +65,15 @@ cat > ~/ansible-lab/broken1.yml << 'EOF'
     - name: This task also has correct indentation
       ansible.builtin.debug:
         msg: "Correct indent"
-EOF
 ----
++
+Save the file.
 
-. Verify the fix:
+. Verify the fix in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/broken1.yml
+yamllint broken1.yml
 ----
 
 [WARNING]
@@ -96,18 +100,18 @@ tasks:
 YAML does not allow tab characters. Many editors insert tabs when you press the Tab key, causing hard-to-see errors.
 
 [arabic]
-. Create a file with tab characters (we'll use a special marker):
+. Create a new file in VSCode called `broken2.yml` with tab characters. In the integrated terminal, run:
 +
 [source,bash,role=execute]
 ----
-printf "---\n- name: Broken tabs example\n  hosts: webservers\n  tasks:\n\t- name: Task with tab\n\t  ansible.builtin.ping:\n" > ~/ansible-lab/broken2.yml
+printf "---\n- name: Broken tabs example\n  hosts: webservers\n  tasks:\n\t- name: Task with tab\n\t  ansible.builtin.ping:\n" > broken2.yml
 ----
 
-. Try to validate it:
+. Try to validate it in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/broken2.yml
+yamllint broken2.yml
 ----
 +
 You'll see: `found character '\t' that cannot start any token`
@@ -116,30 +120,30 @@ You'll see: `found character '\t' that cannot start any token`
 +
 [source,bash,role=execute]
 ----
-cat -A ~/ansible-lab/broken2.yml | grep "^I"
+cat -A broken2.yml | grep "^I"
 ----
 +
 The `^I` shows where tab characters are.
 
-. Fix by recreating with spaces only:
+. Fix the file in VSCode. Open `broken2.yml` and replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken2.yml << 'EOF'
 ---
 - name: Fixed tabs example
   hosts: webservers
   tasks:
     - name: Task with spaces only
       ansible.builtin.ping:
-EOF
 ----
++
+Save the file.
 
-. Verify the fix:
+. Verify the fix in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/broken2.yml
+yamllint broken2.yml
 ----
 
 [TIP]
@@ -161,11 +165,10 @@ Most modern editors (VS Code, vim, nano) can do this.
 Variable names and keys are case-sensitive in YAML. `HTTP_PORT` and `http_port` are different variables.
 
 [arabic]
-. Create a file with case sensitivity errors:
+. Create a new file in VSCode called `broken3.yml` with the following content:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken3.yml << 'EOF'
 ---
 - name: Case sensitivity problem
   hosts: webservers
@@ -175,14 +178,15 @@ cat > ~/ansible-lab/broken3.yml << 'EOF'
     - name: Use the port variable
       ansible.builtin.debug:
         msg: "Port is {{ HTTP_PORT }}"
-EOF
 ----
++
+Save the file.
 
-. Check for undefined variables:
+. Check for undefined variables in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/broken3.yml
+ansible-playbook --syntax-check -i inventory.yml broken3.yml
 ----
 +
 The syntax check passes, but the variable won't be found at runtime!
@@ -191,14 +195,13 @@ The syntax check passes, but the variable won't be found at runtime!
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/broken3.yml 2>&1 | grep -i "HTTP_PORT\|undefined"
+ansible-playbook --check -i inventory.yml broken3.yml 2>&1 | grep -i "HTTP_PORT\|undefined"
 ----
 
-. Fix with consistent casing:
+. Fix the file in VSCode with consistent casing. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken3.yml << 'EOF'
 ---
 - name: Case sensitivity fixed
   hosts: webservers
@@ -208,14 +211,15 @@ cat > ~/ansible-lab/broken3.yml << 'EOF'
     - name: Use the port variable
       ansible.builtin.debug:
         msg: "Port is {{ http_port }}"
-EOF
 ----
++
+Save the file.
 
-. Verify it works:
+. Verify it works in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/broken3.yml
+ansible-playbook --check -i inventory.yml broken3.yml
 ----
 
 [IMPORTANT]
@@ -233,11 +237,10 @@ ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/broken3.ym
 Variables in YAML values must be quoted if they start the value, but quoting rules can be tricky.
 
 [arabic]
-. Create a file with quote errors:
+. Create a new file in VSCode called `broken4.yml` with the following content:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken4.yml << 'EOF'
 ---
 - name: Quote problems
   hosts: webservers
@@ -248,23 +251,23 @@ cat > ~/ansible-lab/broken4.yml << 'EOF'
       ansible.builtin.package:
         name: {{ package_name }}
         state: present
-EOF
 ----
++
+Save the file.
 
-. Try to check syntax:
+. Try to check syntax in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/broken4.yml
+ansible-playbook --syntax-check -i inventory.yml broken4.yml
 ----
 +
 You'll see: `found undefined alias` or similar error.
 
-. Fix with proper quotes:
+. Fix the file in VSCode with proper quotes. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken4.yml << 'EOF'
 ---
 - name: Quote problems fixed
   hosts: webservers
@@ -275,14 +278,15 @@ cat > ~/ansible-lab/broken4.yml << 'EOF'
       ansible.builtin.package:
         name: "{{ package_name }}"
         state: present
-EOF
 ----
++
+Save the file.
 
-. Verify the fix:
+. Verify the fix in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/broken4.yml
+ansible-playbook --syntax-check -i inventory.yml broken4.yml
 ----
 
 [NOTE]
@@ -308,48 +312,48 @@ name: {{ package_name }}              # ❌ Error!
 YAML dictionaries require a colon (`:`) after each key. Forgetting the colon is a common typo.
 
 [arabic]
-. Create a file with a missing colon:
+. Create a new file in VSCode called `broken5.yml` with the following content:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken5.yml << 'EOF'
 ---
 - name: Missing colon
   hosts: webservers
   tasks
     - name: Ping hosts
       ansible.builtin.ping:
-EOF
 ----
++
+Save the file.
 
-. Check syntax:
+. Check syntax in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/broken5.yml
+yamllint broken5.yml
 ----
 +
 You'll see: `could not find expected ':'`
 
-. Fix by adding the colon:
+. Fix the file in VSCode by adding the colon. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/broken5.yml << 'EOF'
 ---
 - name: Missing colon fixed
   hosts: webservers
   tasks:
     - name: Ping hosts
       ansible.builtin.ping:
-EOF
 ----
++
+Save the file.
 
-. Verify:
+. Verify in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/broken5.yml
+yamllint broken5.yml
 ----
 
 == Debugging Tools
@@ -359,25 +363,25 @@ yamllint ~/ansible-lab/broken5.yml
 `yamllint` is a YAML validator that checks syntax and style.
 
 [arabic]
-. Run yamllint on your inventory:
+. Run yamllint on your inventory in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/inventory.yml
+yamllint inventory.yml
 ----
 
 . Run yamllint on your playbook:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/site.yml
+yamllint site.yml
 ----
 
 . yamllint can show specific error types:
 +
 [source,bash,role=execute]
 ----
-yamllint -f parsable ~/ansible-lab/site.yml
+yamllint -f parsable site.yml
 ----
 
 [TIP]
@@ -396,11 +400,11 @@ yamllint -f parsable ~/ansible-lab/site.yml
 This checks Ansible-specific syntax beyond basic YAML.
 
 [arabic]
-. Check your playbook:
+. Check your playbook in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
 . This catches errors like:
@@ -420,11 +424,11 @@ ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/sit
 Check mode (dry-run) shows what would happen without making changes.
 
 [arabic]
-. Run in check mode:
+. Run in check mode using the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --check -i ~/ansible-lab/inventory.yml ~/ansible-lab/site.yml
+ansible-playbook --check -i inventory.yml site.yml
 ----
 
 . This can reveal:
@@ -454,11 +458,10 @@ When you encounter a YAML error, follow this process:
 Let's test what you've learned:
 
 [arabic]
-. Create a deliberately broken playbook:
+. Create a deliberately broken playbook in VSCode. Create a new file called `debug-challenge.yml` with the following content:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/debug-challenge.yml << 'EOF'
 ---
 - name: Debug Challenge
   hosts: webservers
@@ -472,14 +475,15 @@ cat > ~/ansible-lab/debug-challenge.yml << 'EOF'
     - name: Another task
       ansible.builtin.debug:
         msg: "Done"
-EOF
 ----
++
+Save the file.
 
-. Find all the errors using yamllint:
+. Find all the errors using yamllint in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/debug-challenge.yml
+yamllint debug-challenge.yml
 ----
 
 . Can you identify these issues?
@@ -489,11 +493,10 @@ yamllint ~/ansible-lab/debug-challenge.yml
 * Missing quotes around `{{ package_name }}`
 * Second task has wrong indentation
 
-. Fix all the errors:
+. Fix all the errors in VSCode. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/debug-challenge.yml << 'EOF'
 ---
 - name: Debug Challenge
   hosts: webservers
@@ -508,15 +511,16 @@ cat > ~/ansible-lab/debug-challenge.yml << 'EOF'
     - name: Another task
       ansible.builtin.debug:
         msg: "Done"
-EOF
 ----
++
+Save the file.
 
-. Verify the fixed version:
+. Verify the fixed version in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-yamllint ~/ansible-lab/debug-challenge.yml
-ansible-playbook --syntax-check -i ~/ansible-lab/inventory.yml ~/ansible-lab/debug-challenge.yml
+yamllint debug-challenge.yml
+ansible-playbook --syntax-check -i inventory.yml debug-challenge.yml
 ----
 
 == Common Error Messages and Solutions
@@ -573,11 +577,12 @@ Congratulations! You've completed the YAML Essentials for Ansible lab. You now h
 
 === Your Final Lab Files
 
-You've created:
+You've created in the `ansible-lab` folder:
 
-* `~/ansible-lab/inventory.yml` - A structured inventory with groups and variables
-* `~/ansible-lab/site.yml` - A documented playbook with variables and tasks
-* `~/ansible-lab/broken*.yml` - Example files showing common errors
+* `inventory.yml` - A structured inventory with groups and variables
+* `site.yml` - A documented playbook with variables and tasks
+* `broken*.yml` - Example files showing common errors
+* `debug-challenge.yml` - A practice debugging exercise
 
 === Next Steps
 

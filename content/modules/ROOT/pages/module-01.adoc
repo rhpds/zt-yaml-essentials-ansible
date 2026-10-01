@@ -41,20 +41,17 @@ Before we dive into YAML syntax, let's understand some fundamental rules:
 Let's start by creating a simple YAML inventory file. In Ansible, inventory files define the hosts (servers) you want to manage.
 
 [arabic]
-. First, let's create a directory for our lab files:
+. In VSCode, create a new folder for your lab files:
 +
-[source,bash,role=execute]
-----
-mkdir -p ~/ansible-lab
-cd ~/ansible-lab
-----
+* Click *File > Open Folder* (or *File > Open* on macOS)
+* Navigate to your home directory
+* Click *New Folder* and name it `ansible-lab`
+* Click *Open* to open this folder in VSCode
 
 . Create an empty inventory file:
 +
-[source,bash,role=execute]
-----
-touch inventory.yml
-----
+* In the VSCode Explorer pane, click the *New File* icon
+* Name the file `inventory.yml`
 
 == YAML Data Types
 
@@ -65,32 +62,28 @@ YAML has three fundamental data types that you'll use constantly in Ansible:
 Scalars are basic, single-value data types like strings, numbers, and booleans.
 
 [arabic]
-. Let's add some simple host entries to our inventory. Open the file in an editor:
+. Let's add some simple host entries to our inventory. In VSCode, open `inventory.yml` and add the following content:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/inventory.yml << 'EOF'
 ---
 web1.example.com
 web2.example.com
 db1.example.com
-EOF
 ----
++
+Save the file (*File > Save* or `Ctrl+S` / `Cmd+S`).
 
-. View your inventory file:
+. You should see three hostnames listed in your file. Each hostname is a *scalar* - a simple string value.
+
+. Verify the YAML syntax is valid using VSCode's integrated terminal:
++
+* Open the terminal: *View > Terminal* (or `Ctrl+``)
+* Run the following command:
 +
 [source,bash,role=execute]
 ----
-cat ~/ansible-lab/inventory.yml
-----
-+
-You should see three hostnames listed. Each hostname is a *scalar* - a simple string value.
-
-. Verify the YAML syntax is valid:
-+
-[source,bash,role=execute]
-----
-yamllint ~/ansible-lab/inventory.yml
+yamllint inventory.yml
 ----
 
 [TIP]
@@ -107,33 +100,26 @@ Lists define collections of items and are identified by leading hyphens (`-`). A
 Let's expand our inventory to use proper list syntax:
 
 [arabic]
-. Update the inventory file with list syntax:
+. Update `inventory.yml` in VSCode with list syntax. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/inventory.yml << 'EOF'
 ---
 hosts:
   - web1.example.com
   - web2.example.com
   - db1.example.com
-EOF
 ----
++
+Save the file.
 
-. View the updated file:
+. Notice how each hostname now starts with a hyphen (`-`) and is indented with 2 spaces under the `hosts:` key.
+
+. Verify the syntax in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-cat ~/ansible-lab/inventory.yml
-----
-+
-Notice how each hostname now starts with a hyphen (`-`) and is indented with 2 spaces under the `hosts:` key.
-
-. Verify the syntax:
-+
-[source,bash,role=execute]
-----
-yamllint ~/ansible-lab/inventory.yml
+yamllint inventory.yml
 ----
 
 === Dictionaries (Key-Value Pairs)
@@ -143,11 +129,10 @@ Dictionaries associate keys with values. They're used throughout Ansible for con
 Let's create a proper inventory with host groups:
 
 [arabic]
-. Update your inventory to use dictionaries and nested structures:
+. Update `inventory.yml` in VSCode to use dictionaries and nested structures. Replace all the content with:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/inventory.yml << 'EOF'
 ---
 all:
   children:
@@ -158,27 +143,22 @@ all:
     databases:
       hosts:
         db1.example.com:
-EOF
 ----
++
+Save the file.
 
-. View the structured inventory:
+. This inventory now has:
 +
-[source,bash,role=execute]
-----
-cat ~/ansible-lab/inventory.yml
-----
-+
-This inventory now has:
 * `all:` - A top-level dictionary key
 * `children:` - A nested dictionary defining groups
 * `webservers:` and `databases:` - Group names (dictionary keys)
 * `hosts:` - Another nested dictionary containing host lists
 
-. Verify with Ansible:
+. Verify with Ansible in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-inventory -i ~/ansible-lab/inventory.yml --list
+ansible-inventory -i inventory.yml --list
 ----
 +
 This command shows how Ansible interprets your YAML inventory structure.
@@ -204,11 +184,10 @@ YAML is case-sensitive, which means `HTTP_PORT` and `http_port` are completely d
 Let's add some host variables to demonstrate:
 
 [arabic]
-. Add variables to one of your hosts:
+. Add variables to your hosts in VSCode. Update `inventory.yml` with the following content:
 +
-[source,bash,role=execute]
+[source,yaml]
 ----
-cat > ~/ansible-lab/inventory.yml << 'EOF'
 ---
 all:
   children:
@@ -224,14 +203,15 @@ all:
       hosts:
         db1.example.com:
           db_port: 5432
-EOF
 ----
++
+Save the file.
 
-. Verify the inventory structure:
+. Verify the inventory structure in the integrated terminal:
 +
 [source,bash,role=execute]
 ----
-ansible-inventory -i ~/ansible-lab/inventory.yml --list --yaml
+ansible-inventory -i inventory.yml --list --yaml
 ----
 +
 Notice how each host now has variables associated with it. The variable names use consistent casing throughout.
@@ -248,18 +228,18 @@ If you use `http_port` in one place and `HTTP_PORT` in another, Ansible will tre
 Let's create a quick test to ensure your inventory is valid:
 
 [arabic]
-. Test that Ansible can read all hosts in the webservers group:
+. Test that Ansible can read all hosts in the webservers group. In the integrated terminal, run:
 +
 [source,bash,role=execute]
 ----
-ansible webservers -i ~/ansible-lab/inventory.yml --list-hosts
+ansible webservers -i inventory.yml --list-hosts
 ----
 
 . Test the databases group:
 +
 [source,bash,role=execute]
 ----
-ansible databases -i ~/ansible-lab/inventory.yml --list-hosts
+ansible databases -i inventory.yml --list-hosts
 ----
 
 == Key Takeaways
