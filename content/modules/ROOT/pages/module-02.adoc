@@ -20,10 +20,6 @@ An Ansible playbook consists of one or more *plays*. Each play:
 * Contains a list of tasks to execute
 * Can set variables and other play-level options
 
-======
-.📖 Playbook Structure Overview
-[%collapsible]
-=====
 The basic structure looks like this:
 
 [source,yaml]
@@ -37,9 +33,15 @@ The basic structure looks like this:
         parameter: value
 ----
 
-IMPORTANT: *Playbook Best Practices:* Start playbooks with `---` to indicate the beginning. Always name your plays and tasks for readability. Use 2 spaces for indentation consistently. Use fully-qualified collection names (FQCN) for modules: `ansible.builtin.ping` instead of just `ping`.
-=====
-======
+[IMPORTANT]
+====
+*Playbook Best Practices:*
+
+* Start playbooks with `---` to indicate the beginning
+* Always name your plays and tasks for readability
+* Use 2 spaces for indentation consistently
+* Use fully-qualified collection names (FQCN) for modules: `ansible.builtin.ping` instead of just `ping`
+====
 
 == Hands-On Experience
 
@@ -116,10 +118,8 @@ TIP: The playbook output uses colors: *Green* = Success (no changes made), *Yell
 
 Let's expand the playbook to install Apache web server on the web servers.
 
-======
-.📖 Understanding Module Parameters
-[%collapsible]
-=====
+=== Understanding Module Parameters
+
 Ansible modules accept parameters as key-value pairs. The `ansible.builtin.package` module needs to know which package to install:
 
 [source,yaml]
@@ -128,8 +128,6 @@ ansible.builtin.package:
   name: httpd
   state: present
 ----
-=====
-======
 
 ======
 .☑️ Task 3 - Add Apache installation tasks
@@ -204,10 +202,8 @@ You should now see all three tasks execute:
 =====
 ======
 
-======
-.📖 Understanding Task Execution
-[%collapsible]
-=====
+=== Understanding Task Execution
+
 Tasks in a playbook execute in order, top to bottom:
 
 . First task: `ping` - Tests connectivity
@@ -215,13 +211,9 @@ Tasks in a playbook execute in order, top to bottom:
 . Third task: `service` - Starts and enables httpd
 
 If any task fails, the playbook stops executing on that host.
-=====
-======
 
-======
-.📖 Boolean Values in YAML
-[%collapsible]
-=====
+=== Boolean Values in YAML
+
 Notice `become: true` in the playbook. YAML supports boolean values:
 
 * Use `true` and `false` (lowercase)
@@ -234,16 +226,12 @@ become: yes          # ✅ Works, but not preferred
 become: True         # ❌ Avoid - case inconsistent
 enabled: true        # ✅ Correct
 ----
-=====
-======
 
-======
-.📖 Module Parameters Reference
-[%collapsible]
-=====
-Different Ansible modules accept different parameters. Here are the parameters we've used:
+=== Module Parameters
 
-*`ansible.builtin.package` Module:*
+Different Ansible modules accept different parameters. Let's look at the parameters we've used:
+
+==== `ansible.builtin.package` Module
 
 [source,yaml]
 ----
@@ -252,7 +240,7 @@ ansible.builtin.package:
   state: present       # Desired state: present, absent, latest
 ----
 
-*`ansible.builtin.service` Module:*
+==== `ansible.builtin.service` Module
 
 [source,yaml]
 ----
@@ -262,9 +250,15 @@ ansible.builtin.service:
   enabled: true        # Enable on boot (boolean)
 ----
 
-TIP: To see all parameters for a module, use: `ansible-doc ansible.builtin.package`
-=====
-======
+[TIP]
+====
+To see all parameters for a module, use:
+
+[source,bash]
+----
+ansible-doc ansible.builtin.package
+----
+====
 
 ======
 .☑️ Task 5 - Verify Apache is running
@@ -326,22 +320,13 @@ In this module, you learned:
 You've created a working Ansible playbook that installs and configures Apache! In the next module, you'll learn how to use variables to make your playbooks more flexible and maintainable.
 
 == Embracing the Next Challenge
-======
-.✅ Next Challenge
-[%collapsible]
-=====
+
 Once you've completed the tasks above, proceed to the next module to learn about Ansible variables.
 
 * Review your playbook structure and ensure all tasks completed successfully
 * Make sure Apache is installed and running on your web servers
 * Take a moment to understand how the YAML structure translates to Ansible actions
-=====
-======
 
-======
-.🐛 Encountered an issue?
-[%collapsible]
-=====
+== Encountered an issue?
+
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
-=====
-======

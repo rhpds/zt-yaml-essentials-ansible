@@ -14,35 +14,39 @@ In this module, you will:
 * Create your first YAML inventory file
 * Master case sensitivity in YAML
 
-======
-.📖 Why YAML for Ansible?
-[%collapsible]
-=====
+=== Why YAML for Ansible?
+
 YAML offers several advantages for automation:
 
 * *Readability:* YAML's structure makes it simple for users of all skill levels to understand and write Ansible content
 * *Support for complex use cases:* YAML can represent lists and dictionaries, allowing complex configurations with simplicity
 * *Wide adoption:* YAML skills are transferable across many configuration management tools
 * *Low learning curve:* YAML's easy syntax lowers the barrier to getting started with Ansible
-=====
-======
 
 == YAML File Basics
 
-======
-.📖 Critical YAML Rules
-[%collapsible]
-=====
 Before we dive into YAML syntax, understand these fundamental rules:
+
+[IMPORTANT]
+====
+*Critical YAML Rules:*
 
 * YAML files typically use the `.yml` or `.yaml` extension
 * YAML is *case-sensitive* - `Name` and `name` are different
 * Use *2 spaces* for indentation (never tabs!)
 * Files often start with `---` to indicate the beginning of a YAML document
+====
 
-TIP: *Using the Web-Based VSCode Editor:* Click the *VSCode Editor* tab to open the editor interface. The `ansible-lab` folder is already created and loaded for you. The left sidebar shows your files and folders. To create a file: hover over the folder name and click the *New File* icon (page with +). Save files with *File > Save* or `Ctrl+S`.
-=====
-======
+[TIP]
+====
+*Using the Web-Based VSCode Editor:*
+
+* Click the *VSCode Editor* tab to open the editor interface
+* The `ansible-lab` folder is already created and loaded for you
+* The left sidebar shows your files and folders
+* To create a file: hover over the folder name and click the *New File* icon (page with +)
+* Save files with *File > Save* or `Ctrl+S`
+====
 
 == Hands-On Experience
 
@@ -296,22 +300,13 @@ In this module, you learned:
 You've created a valid Ansible inventory file with hosts, groups, and variables. In the next module, you'll write your first playbook using this inventory!
 
 == Embracing the Next Challenge
-======
-.✅ Next Challenge
-[%collapsible]
-=====
+
 Once you've completed the tasks above, proceed to the next module to learn how to write your first Ansible playbook.
 
 * Review your inventory structure and ensure all hosts are properly defined
 * Make sure you understand the difference between scalars, lists, and dictionaries
 * Take a moment to understand the importance of consistent indentation and casing
-=====
-======
 
-======
-.🐛 Encountered an issue?
-[%collapsible]
-=====
+== Encountered an issue?
+
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
-=====
-======

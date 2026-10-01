@@ -356,22 +356,13 @@ In this module, you learned:
 In the next module, you'll learn how to use debugging tools and fix a broken playbook to get it running!
 
 == Embracing the Next Challenge
-======
-.✅ Next Challenge
-[%collapsible]
-=====
+
 Once you've completed the tasks above, proceed to the next module to learn about debugging tools and workflows.
 
 * Review the five common error types and how to fix them
 * Practice identifying errors from yamllint output
 * Take a moment to understand why each error type occurs
-=====
-======
 
-======
-.🐛 Encountered an issue?
-[%collapsible]
-=====
+== Encountered an issue?
+
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
-=====
-======

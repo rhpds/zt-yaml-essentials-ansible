@@ -12,18 +12,14 @@ In this module, you will:
 * Write effective comments for documentation
 * Apply YAML best practices
 
-======
-.📖 Why Use Variables?
-[%collapsible]
-=====
+== Why Use Variables?
+
 Variables provide several benefits:
 
 * *Reusability:* Change a value once instead of in multiple places
 * *Flexibility:* Easily customize playbooks for different environments
 * *Readability:* Meaningful variable names make code self-documenting
 * *Maintainability:* Centralize configuration values
-=====
-======
 
 == Hands-On Experience
 
@@ -76,18 +72,14 @@ IMPORTANT: *Variable Syntax - Jinja2 Templates:* When using variables in YAML va
 =====
 ======
 
-======
-.📖 Variable Naming Conventions
-[%collapsible]
-=====
+=== Variable Naming Conventions
+
 Follow these best practices for variable names:
 
 * Use lowercase with underscores: `http_port`, `max_clients`
 * Make names descriptive: `web_package` not `pkg`
 * Avoid starting with numbers: `port_80` not `80_port`
 * Be consistent with casing throughout your playbook
-=====
-======
 
 ======
 .☑️ Task 2 - Verify variables work
@@ -155,11 +147,11 @@ NOTE: *The `loop` Keyword:* The `loop:` keyword tells Ansible to repeat the task
 =====
 ======
 
-======
-.📖 Comment Syntax
-[%collapsible]
-=====
+== Adding Comments
+
 Comments make your YAML files more maintainable by explaining why decisions were made, documenting complex logic, or marking TODOs.
+
+=== Comment Syntax
 
 YAML comments begin with `#`. Everything after `#` on a line is ignored:
 
@@ -169,8 +161,6 @@ YAML comments begin with `#`. Everything after `#` on a line is ignored:
 vars:
   http_port: 80  # This is an inline comment
 ----
-=====
-======
 
 ======
 .☑️ Task 4 - Add effective comments
@@ -233,10 +223,8 @@ TIP: *When to Add Comments:* Document the *purpose* of the playbook at the top. 
 =====
 ======
 
-======
-.📖 Comment Best Practices
-[%collapsible]
-=====
+=== Comment Best Practices
+
 [cols="1,2",options="header"]
 |===
 |Practice |Example
@@ -256,15 +244,12 @@ TIP: *When to Add Comments:* Document the *purpose* of the playbook at the top. 
 |Mark TODOs
 |`# TODO: Add SSL certificate configuration`
 |===
-=====
-======
 
-======
-.📖 YAML Best Practices Summary
-[%collapsible]
-=====
+== YAML Best Practices Summary
+
 Here are the key best practices you've learned:
 
+[arabic]
 . *Start files with `---`* to mark YAML document beginning
 . *Use 2 spaces for indentation* - never tabs
 . *Maintain consistent casing* in variable names
@@ -274,8 +259,6 @@ Here are the key best practices you've learned:
 . *Use `true`/`false`* for boolean values
 . *Avoid unnecessary quotes* on simple strings
 . *Keep playbooks readable* with blank lines between sections
-=====
-======
 
 ======
 .☑️ Task 5 - Verify your work
@@ -315,10 +298,8 @@ grep -c "^#\|  #" site.yml
 =====
 ======
 
-======
-.📖 More Boolean Examples
-[%collapsible]
-=====
+== More Boolean Examples
+
 You've seen `become: true` and `enabled: true`. Here are other common boolean uses in Ansible:
 
 [source,yaml]
@@ -328,8 +309,6 @@ check_mode: true          # Run in dry-run mode
 ignore_errors: true       # Continue even if task fails
 changed_when: false       # Never report as "changed"
 ----
-=====
-======
 
 == Key Takeaways
 
@@ -348,22 +327,13 @@ In this module, you learned:
 Your playbook is now flexible, well-documented, and follows Ansible best practices! In the next module, you'll learn how to debug common YAML errors and troubleshoot syntax issues.
 
 == Embracing the Next Challenge
-======
-.✅ Next Challenge
-[%collapsible]
-=====
+
 Once you've completed the tasks above, proceed to the next module to learn about common YAML errors.
 
 * Review your variable definitions and ensure they follow naming conventions
 * Make sure your comments document the "why" not the "what"
 * Take a moment to understand how loops work with list variables
-=====
-======
 
-======
-.🐛 Encountered an issue?
-[%collapsible]
-=====
+== Encountered an issue?
+
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
-=====
-======
