@@ -1,32 +1,33 @@
-= Debugging YAML
+:sectnums:
+= Common YAML Errors
 
 == Introduction
 
-Even experienced developers make YAML syntax errors. The good news? YAML errors follow predictable patterns, and the tools to catch them are excellent.
+Even experienced developers make YAML syntax errors. The good news? YAML errors follow predictable patterns, and learning to recognize them will save you hours of debugging time.
 
-In this final module, you will:
+In this module, you will:
 
 * Identify and fix common YAML syntax errors
-* Use `yamllint` to validate YAML structure
-* Use `ansible-playbook --syntax-check` to catch Ansible-specific errors
-* Debug indentation, tabs, case sensitivity, and quote issues
-* Apply troubleshooting techniques to broken playbooks
+* Understand indentation problems
+* Recognize tab vs. space issues
+* Debug case sensitivity mistakes
+* Fix quote-related errors
+* Catch missing colons
 
-== Common YAML Errors
+== Hands-On Experience
 
-Let's explore the most frequent YAML mistakes and learn how to fix them.
-
-=== Error 1: Indentation Problems
+======
+.☑️ Task 1 - Fix indentation problems
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
 
 Indentation errors are the #1 cause of YAML failures. Remember: YAML requires *exactly 2 spaces* per level.
 
-[arabic]
-. Create a new file in VSCode with an indentation error:
-+
-* In the left sidebar, hover over the `ansible-lab` folder
-* Click the *New File* icon (page with a plus sign)
-* Type `broken1.yml` as the filename and press Enter
-* In the editor, add the following content:
+. In the left sidebar, hover over the `ansible-lab` folder
+. Click the *New File* icon (page with a plus sign)
+. Type `broken1.yml` as the filename and press Enter
+. In the editor, add the following content with intentional indentation errors:
 +
 [source,yaml]
 ----
@@ -41,9 +42,9 @@ Indentation errors are the #1 cause of YAML failures. Remember: YAML requires *e
        msg: "Wrong indent"
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Try to check the syntax in the integrated terminal:
+. Switch to the *Terminal* tab and try to check the syntax:
 +
 [source,bash,role=execute]
 ----
@@ -68,47 +69,35 @@ You'll see errors about indentation!
         msg: "Correct indent"
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Verify the fix in the integrated terminal:
+. Switch to the *Terminal* tab and verify the fix:
 +
 [source,bash,role=execute]
 ----
 yamllint broken1.yml
 ----
 
-[WARNING]
-====
-*Indentation Rules:*
+WARNING: *Indentation Rules:* Use exactly 2 spaces per indentation level. Never mix spaces and tabs. Every child element must be indented from its parent. All items at the same level must have the same indentation.
+=====
+======
 
-* Use exactly 2 spaces per indentation level
-* Never mix spaces and tabs
-* Every child element must be indented from its parent
-* All items at the same level must have the same indentation
-
-*Common mistake:*
-[source,yaml]
-----
-tasks:
-  - name: Task one
-    ansible.builtin.ping:
-   - name: Task two        # ❌ Wrong! Should be 2 or 4 spaces, not 3
-----
-====
-
-=== Error 2: Tabs Instead of Spaces
+======
+.☑️ Task 2 - Detect tabs instead of spaces
+[%collapsible]
+=====
+NOTE: Switch to the *Terminal* tab
 
 YAML does not allow tab characters. Many editors insert tabs when you press the Tab key, causing hard-to-see errors.
 
-[arabic]
-. Create a new file in VSCode called `broken2.yml` with tab characters. In the integrated terminal, run:
+. Create a file with tab characters using the terminal:
 +
 [source,bash,role=execute]
 ----
 printf "---\n- name: Broken tabs example\n  hosts: webservers\n  tasks:\n\t- name: Task with tab\n\t  ansible.builtin.ping:\n" > broken2.yml
 ----
 
-. Try to validate it in the integrated terminal:
+. Try to validate it:
 +
 [source,bash,role=execute]
 ----
@@ -126,7 +115,7 @@ cat -A broken2.yml | grep "^I"
 +
 The `^I` shows where tab characters are.
 
-. Fix the file in VSCode. Open `broken2.yml` and replace all the content with:
+. Switch to the *VSCode Editor* tab and fix the file. Open `broken2.yml` and replace all the content with:
 +
 [source,yaml]
 ----
@@ -138,34 +127,27 @@ The `^I` shows where tab characters are.
       ansible.builtin.ping:
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Verify the fix in the integrated terminal:
+. Switch to the *Terminal* tab and verify the fix:
 +
 [source,bash,role=execute]
 ----
 yamllint broken2.yml
 ----
 
-[TIP]
-====
-*Configure Your Editor:*
+TIP: *Configure Your Editor:* Set your text editor to convert tabs to spaces, set tab width to 2 spaces, show whitespace characters (helps spot tabs), and auto-indent with spaces. Most modern editors (VS Code, vim, nano) can do this.
+=====
+======
 
-Set your text editor to:
-
-* Convert tabs to spaces
-* Set tab width to 2 spaces
-* Show whitespace characters (helps spot tabs)
-* Auto-indent with spaces
-
-Most modern editors (VS Code, vim, nano) can do this.
-====
-
-=== Error 3: Case Sensitivity Issues
+======
+.☑️ Task 3 - Fix case sensitivity issues
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
 
 Variable names and keys are case-sensitive in YAML. `HTTP_PORT` and `http_port` are different variables.
 
-[arabic]
 . Create a new file called `broken3.yml`:
 +
 * Click the *New File* icon in the left sidebar
@@ -185,9 +167,9 @@ Variable names and keys are case-sensitive in YAML. `HTTP_PORT` and `http_port` 
         msg: "Port is {{ HTTP_PORT }}"
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Check for undefined variables in the integrated terminal:
+. Switch to the *Terminal* tab and check for undefined variables:
 +
 [source,bash,role=execute]
 ----
@@ -205,7 +187,7 @@ ansible-playbook -i inventory.yml broken3.yml -v
 +
 You'll see the undefined variable `HTTP_PORT` in the output.
 
-. Fix the file in VSCode with consistent casing. Replace all the content with:
+. Switch to the *VSCode Editor* tab and fix the file with consistent casing. Replace all the content with:
 +
 [source,yaml]
 ----
@@ -220,30 +202,27 @@ You'll see the undefined variable `HTTP_PORT` in the output.
         msg: "Port is {{ http_port }}"
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Verify it works in the integrated terminal:
+. Switch to the *Terminal* tab and verify it works:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml broken3.yml
 ----
 
-[IMPORTANT]
-====
-*Case Sensitivity Checklist:*
+IMPORTANT: *Case Sensitivity Checklist:* Variable names must match exactly - `http_port` defined, `http_port` used (not `HTTP_PORT`). Module names are always lowercase: `ansible.builtin.ping`. Dictionary keys must match exactly between definition and use.
+=====
+======
 
-* ✅ Variable names: `http_port` defined, `http_port` used
-* ❌ Variable names: `http_port` defined, `HTTP_PORT` used
-* ✅ Module names: `ansible.builtin.ping` (always lowercase)
-* ✅ Dictionary keys: Match exactly between definition and use
-====
-
-=== Error 4: Missing or Incorrect Quotes
+======
+.☑️ Task 4 - Fix missing or incorrect quotes
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
 
 Variables in YAML values must be quoted if they start the value, but quoting rules can be tricky.
 
-[arabic]
 . Create a new file called `broken4.yml`:
 +
 * Click the *New File* icon in the left sidebar
@@ -264,9 +243,9 @@ Variables in YAML values must be quoted if they start the value, but quoting rul
         state: present
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Try to check syntax in the integrated terminal:
+. Switch to the *Terminal* tab and try to check syntax:
 +
 [source,bash,role=execute]
 ----
@@ -275,7 +254,7 @@ ansible-playbook --syntax-check -i inventory.yml broken4.yml
 +
 You'll see: `found undefined alias` or similar error.
 
-. Fix the file in VSCode with proper quotes. Replace all the content with:
+. Switch to the *VSCode Editor* tab and fix the file with proper quotes. Replace all the content with:
 +
 [source,yaml]
 ----
@@ -291,38 +270,27 @@ You'll see: `found undefined alias` or similar error.
         state: present
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Verify the fix in the integrated terminal:
+. Switch to the *Terminal* tab and verify the fix:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml broken4.yml
 ----
 
-[NOTE]
-====
-*Quoting Rules for Variables:*
+NOTE: *Quoting Rules for Variables:* Variables at the START of a value need quotes: `name: "{{ package_name }}"` is correct. Variables NOT at the start don't need quotes (but can have them): `msg: "Installing {{ package_name }}"` is correct. NEVER without quotes when at start: `name: {{ package_name }}` will cause an error!
+=====
+======
 
-[source,yaml]
-----
-# Variables at the START of a value need quotes
-name: "{{ package_name }}"           # ✅ Correct
-
-# Variables NOT at the start don't need quotes (but can have them)
-msg: "Installing {{ package_name }}"  # ✅ Correct
-msg: Installing {{ package_name }}    # ⚠️ Works but inconsistent
-
-# NEVER without quotes when at start
-name: {{ package_name }}              # ❌ Error!
-----
-====
-
-=== Error 5: Missing Colons
+======
+.☑️ Task 5 - Fix missing colons
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
 
 YAML dictionaries require a colon (`:`) after each key. Forgetting the colon is a common typo.
 
-[arabic]
 . Create a new file called `broken5.yml`:
 +
 * Click the *New File* icon in the left sidebar
@@ -339,9 +307,9 @@ YAML dictionaries require a colon (`:`) after each key. Forgetting the colon is 
       ansible.builtin.ping:
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Check syntax in the integrated terminal:
+. Switch to the *Terminal* tab and check syntax:
 +
 [source,bash,role=execute]
 ----
@@ -350,7 +318,7 @@ yamllint broken5.yml
 +
 You'll see: `could not find expected ':'`
 
-. Fix the file in VSCode by adding the colon. Replace all the content with:
+. Switch to the *VSCode Editor* tab and fix the file by adding the colon. Replace all the content with:
 +
 [source,yaml]
 ----
@@ -362,225 +330,16 @@ You'll see: `could not find expected ':'`
       ansible.builtin.ping:
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-. Verify in the integrated terminal:
+. Switch to the *Terminal* tab and verify:
 +
 [source,bash,role=execute]
 ----
 yamllint broken5.yml
 ----
-
-== Debugging Tools
-
-=== Tool 1: yamllint
-
-`yamllint` is a YAML validator that checks syntax and style.
-
-[arabic]
-. Run yamllint on your inventory in the integrated terminal:
-+
-[source,bash,role=execute]
-----
-yamllint inventory.yml
-----
-
-. Run yamllint on your playbook:
-+
-[source,bash,role=execute]
-----
-yamllint site.yml
-----
-
-. yamllint can show specific error types:
-+
-[source,bash,role=execute]
-----
-yamllint -f parsable site.yml
-----
-
-[TIP]
-====
-*yamllint Error Categories:*
-
-* `syntax error` - Invalid YAML that won't parse
-* `indentation` - Wrong number of spaces
-* `trailing-spaces` - Spaces at end of lines
-* `line-length` - Lines too long (cosmetic)
-* `document-start` - Missing `---` (cosmetic)
-====
-
-=== Tool 2: ansible-playbook --syntax-check
-
-This checks Ansible-specific syntax beyond basic YAML.
-
-[arabic]
-. Check your playbook in the integrated terminal:
-+
-[source,bash,role=execute]
-----
-ansible-playbook --syntax-check -i inventory.yml site.yml
-----
-
-. This catches errors like:
-+
-* Undefined variables (sometimes)
-* Invalid module names
-* Missing required parameters
-* Incorrect play structure
-
-[NOTE]
-====
-`--syntax-check` only validates syntax, it doesn't run the playbook or check if the logic is correct.
-====
-
-=== Tool 3: ansible-playbook --check
-
-Check mode (dry-run) shows what would happen without making changes.
-
-[arabic]
-. Run in check mode using the integrated terminal:
-+
-[source,bash,role=execute]
-----
-ansible-playbook --check -i inventory.yml site.yml
-----
-
-. This can reveal:
-+
-* Undefined variables that only appear at runtime
-* Connection issues
-* Missing inventory hosts
-* Permission problems
-
-[WARNING]
-====
-*Check Mode Limitations:*
-
-Check mode *simulates* changes without making them, which can cause issues:
-
-* ✅ Works: ping, debug, fact gathering
-* ❌ Fails: service tasks when packages aren't installed yet
-
-For playbooks with service tasks (like this lab's examples), use `--syntax-check` for validation instead.
-====
-
-== Troubleshooting Workflow
-
-When you encounter a YAML error, follow this process:
-
-[arabic]
-. *Read the error message carefully* - It usually tells you the line number and what's wrong
-. *Check indentation* - Count spaces, ensure consistency
-. *Look for tabs* - Use `cat -A filename.yml` to reveal tabs
-. *Verify quotes* - Variables at the start of values need quotes
-. *Check colons* - Every dictionary key needs a `:` after it
-. *Validate casing* - Variable and key names must match exactly
-. *Run yamllint* - Catches pure YAML syntax issues
-. *Run --syntax-check* - Catches Ansible-specific issues
-. *Test the playbook* - For this lab, use `--syntax-check` for validation
-
-=== Verify Your Debugging Skills
-
-Let's test what you've learned:
-
-[arabic]
-. Create a deliberately broken playbook:
-+
-* Click the *New File* icon in the left sidebar
-* Name it `debug-challenge.yml`
-* Add the following content:
-+
-[source,yaml]
-----
----
-- name: Debug Challenge
-  hosts: webservers
-  vars:
-    Package_Name: httpd
-  tasks:
-  - name: Install package
-    ansible.builtin.package:
-      name: {{ package_name }}
-      state: present
-    - name: Another task
-      ansible.builtin.debug:
-        msg: "Done"
-----
-+
-Save the file.
-
-. Find all the errors using yamllint in the integrated terminal:
-+
-[source,bash,role=execute]
-----
-yamllint debug-challenge.yml
-----
-
-. Can you identify these issues?
-+
-* Indentation wrong on tasks (should be indented 2 spaces)
-* Variable name case mismatch (`Package_Name` vs `package_name`)
-* Missing quotes around `{{ package_name }}`
-* Second task has wrong indentation
-
-. Fix all the errors in VSCode. Replace all the content with:
-+
-[source,yaml]
-----
----
-- name: Debug Challenge
-  hosts: webservers
-  vars:
-    package_name: httpd
-  tasks:
-    - name: Install package
-      ansible.builtin.package:
-        name: "{{ package_name }}"
-        state: present
-
-    - name: Another task
-      ansible.builtin.debug:
-        msg: "Done"
-----
-+
-Save the file.
-
-. Verify the fixed version in the integrated terminal:
-+
-[source,bash,role=execute]
-----
-yamllint debug-challenge.yml
-ansible-playbook --syntax-check -i inventory.yml debug-challenge.yml
-----
-
-== Common Error Messages and Solutions
-
-[cols="2,3",options="header"]
-|===
-|Error Message |Solution
-
-|`found character '\t' that cannot start any token`
-|Remove tabs, use spaces only
-
-|`could not find expected ':'`
-|Add colon after dictionary key
-
-|`mapping values are not allowed here`
-|Check indentation, often caused by wrong spacing
-
-|`found undefined alias`
-|Add quotes around variables: `"{{ var }}"`
-
-|`ERROR! Syntax Error while loading YAML`
-|Run yamllint to find the specific issue
-
-|`ERROR! The field 'hosts' is required`
-|Add the `hosts:` line to your play
-
-|`'item' is undefined`
-|Add `loop:` when using `{{ item }}`
-|===
+=====
+======
 
 == Key Takeaways
 
@@ -591,37 +350,28 @@ In this module, you learned:
 * ✅ Quote variables at the start of values: `"{{ var }}"`
 * ✅ Every dictionary key needs a colon: `key:`
 * ✅ Use `yamllint` to catch YAML syntax errors
-* ✅ Use `--syntax-check` for Ansible-specific validation
+* ✅ Common errors follow predictable patterns
 * ✅ Read error messages carefully - they point to the problem
-* ✅ Follow the troubleshooting workflow systematically
-* ✅ Understand check mode limitations with service tasks
 
-== Lab Complete!
+In the next module, you'll learn how to use debugging tools and fix a broken playbook to get it running!
 
-Congratulations! You've completed the YAML Essentials for Ansible lab. You now have the skills to:
+== Embracing the Next Challenge
+======
+.✅ Next Challenge
+[%collapsible]
+=====
+Once you've completed the tasks above, proceed to the next module to learn about debugging tools and workflows.
 
-* ✅ Write valid YAML with proper syntax and structure
-* ✅ Create Ansible inventories and playbooks
-* ✅ Use variables to make playbooks flexible
-* ✅ Debug common YAML errors effectively
-* ✅ Apply best practices for maintainable code
+* Review the five common error types and how to fix them
+* Practice identifying errors from yamllint output
+* Take a moment to understand why each error type occurs
+=====
+======
 
-=== Your Final Lab Files
-
-You've created in the `ansible-lab` folder:
-
-* `inventory.yml` - A structured inventory with groups and variables
-* `site.yml` - A documented playbook with variables and tasks
-* `broken*.yml` - Example files showing common errors
-* `debug-challenge.yml` - A practice debugging exercise
-
-=== Next Steps
-
-Now that you know YAML fundamentals, you can:
-
-* Learn more Ansible modules at https://docs.ansible.com
-* Explore Ansible Automation Platform features
-* Build more complex playbooks with roles and includes
-* Practice writing playbooks for your own infrastructure
-
-Keep practicing, and remember: every YAML expert started where you are now!
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
+If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======

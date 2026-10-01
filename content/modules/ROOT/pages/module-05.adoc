@@ -1,0 +1,345 @@
+:sectnums:
+= Debugging Your Playbook
+
+== Introduction
+
+You've learned about common YAML errors - now it's time to master the debugging tools and workflows that will help you fix broken playbooks efficiently.
+
+In this module, you will:
+
+* Use debugging tools: `yamllint`, `--syntax-check`, and `--check`
+* Follow a systematic troubleshooting workflow
+* Fix a broken playbook and get it running
+* Understand common error messages and their solutions
+
+== Debugging Tools
+
+======
+.📖 Tool 1 - yamllint
+[%collapsible]
+=====
+`yamllint` is a YAML validator that checks syntax and style.
+
+*Basic usage:*
+[source,bash]
+----
+yamllint inventory.yml
+yamllint site.yml
+----
+
+*Show specific error types:*
+[source,bash]
+----
+yamllint -f parsable site.yml
+----
+
+*Error Categories:*
+
+* `syntax error` - Invalid YAML that won't parse
+* `indentation` - Wrong number of spaces
+* `trailing-spaces` - Spaces at end of lines
+* `line-length` - Lines too long (cosmetic)
+* `document-start` - Missing `---` (cosmetic)
+=====
+======
+
+======
+.📖 Tool 2 - ansible-playbook --syntax-check
+[%collapsible]
+=====
+This checks Ansible-specific syntax beyond basic YAML.
+
+*Usage:*
+[source,bash]
+----
+ansible-playbook --syntax-check -i inventory.yml site.yml
+----
+
+*What it catches:*
+
+* Undefined variables (sometimes)
+* Invalid module names
+* Missing required parameters
+* Incorrect play structure
+
+NOTE: `--syntax-check` only validates syntax, it doesn't run the playbook or check if the logic is correct.
+=====
+======
+
+======
+.📖 Tool 3 - ansible-playbook --check
+[%collapsible]
+=====
+Check mode (dry-run) shows what would happen without making changes.
+
+*Usage:*
+[source,bash]
+----
+ansible-playbook --check -i inventory.yml site.yml
+----
+
+*What it reveals:*
+
+* Undefined variables that only appear at runtime
+* Connection issues
+* Missing inventory hosts
+* Permission problems
+
+WARNING: *Check Mode Limitations:* Check mode *simulates* changes without making them, which can cause issues. Works well with: ping, debug, fact gathering. May fail with: service tasks when packages aren't installed yet. For playbooks with service tasks (like this lab's examples), use `--syntax-check` for validation instead.
+=====
+======
+
+== Troubleshooting Workflow
+
+======
+.📖 Systematic Debugging Steps
+[%collapsible]
+=====
+When you encounter a YAML error, follow this process:
+
+. *Read the error message carefully* - It usually tells you the line number and what's wrong
+. *Check indentation* - Count spaces, ensure consistency
+. *Look for tabs* - Use `cat -A filename.yml` to reveal tabs
+. *Verify quotes* - Variables at the start of values need quotes
+. *Check colons* - Every dictionary key needs a `:` after it
+. *Validate casing* - Variable and key names must match exactly
+. *Run yamllint* - Catches pure YAML syntax issues
+. *Run --syntax-check* - Catches Ansible-specific issues
+. *Test the playbook* - For this lab, use `--syntax-check` for validation
+=====
+======
+
+== Hands-On Experience
+
+======
+.☑️ Task 1 - Test debugging tools
+[%collapsible]
+=====
+NOTE: Switch to the *Terminal* tab
+
+. Run yamllint on your inventory:
++
+[source,bash,role=execute]
+----
+yamllint inventory.yml
+----
+
+. Run yamllint on your playbook:
++
+[source,bash,role=execute]
+----
+yamllint site.yml
+----
+
+. Check your playbook with ansible-playbook:
++
+[source,bash,role=execute]
+----
+ansible-playbook --syntax-check -i inventory.yml site.yml
+----
+=====
+======
+
+======
+.☑️ Task 2 - Final debugging challenge
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
+
+Let's test what you've learned with a deliberately broken playbook that you'll need to fix!
+
+. Create a new file called `debug-challenge.yml`:
++
+* Click the *New File* icon in the left sidebar
+* Name it `debug-challenge.yml`
+* Add the following content (with multiple errors):
++
+[source,yaml]
+----
+---
+- name: Debug Challenge
+  hosts: webservers
+  vars:
+    Package_Name: httpd
+  tasks:
+  - name: Install package
+    ansible.builtin.package:
+      name: {{ package_name }}
+      state: present
+    - name: Another task
+      ansible.builtin.debug:
+        msg: "Done"
+----
++
+IMPORTANT: Save the file.
+
+. Switch to the *Terminal* tab and find all the errors using yamllint:
++
+[source,bash,role=execute]
+----
+yamllint debug-challenge.yml
+----
+
+. Can you identify these issues?
++
+* Indentation wrong on tasks (should be indented 2 spaces)
+* Variable name case mismatch (`Package_Name` vs `package_name`)
+* Missing quotes around `{{ package_name }}`
+* Second task has wrong indentation
+
+. Switch to the *VSCode Editor* tab and fix all the errors. Replace all the content with:
++
+[source,yaml]
+----
+---
+- name: Debug Challenge
+  hosts: webservers
+  vars:
+    package_name: httpd
+  tasks:
+    - name: Install package
+      ansible.builtin.package:
+        name: "{{ package_name }}"
+        state: present
+
+    - name: Another task
+      ansible.builtin.debug:
+        msg: "Done"
+----
++
+IMPORTANT: Save the file.
+
+. Switch to the *Terminal* tab and verify the fixed version:
++
+[source,bash,role=execute]
+----
+yamllint debug-challenge.yml
+ansible-playbook --syntax-check -i inventory.yml debug-challenge.yml
+----
++
+Both commands should complete without errors!
+
+. Run the playbook to see it in action:
++
+[source,bash,role=execute]
+----
+ansible-playbook -i inventory.yml debug-challenge.yml
+----
++
+.Output should show:
+[source,text]
+----
+PLAY [Debug Challenge] *************************************************
+
+TASK [Gathering Facts] *************************************************
+ok: [web1.example.com]
+ok: [web2.example.com]
+
+TASK [Install package] *************************************************
+changed: [web1.example.com]
+changed: [web2.example.com]
+
+TASK [Another task] ****************************************************
+ok: [web1.example.com] => {
+    "msg": "Done"
+}
+ok: [web2.example.com] => {
+    "msg": "Done"
+}
+
+PLAY RECAP *************************************************************
+web1.example.com           : ok=3    changed=1    unreachable=0    failed=0
+web2.example.com           : ok=3    changed=1    unreachable=0    failed=0
+----
+=====
+======
+
+======
+.📖 Common Error Messages Reference
+[%collapsible]
+=====
+[cols="2,3",options="header"]
+|===
+|Error Message |Solution
+
+|`found character '\t' that cannot start any token`
+|Remove tabs, use spaces only
+
+|`could not find expected ':'`
+|Add colon after dictionary key
+
+|`mapping values are not allowed here`
+|Check indentation, often caused by wrong spacing
+
+|`found undefined alias`
+|Add quotes around variables: `"{{ var }}"`
+
+|`ERROR! Syntax Error while loading YAML`
+|Run yamllint to find the specific issue
+
+|`ERROR! The field 'hosts' is required`
+|Add the `hosts:` line to your play
+
+|`'item' is undefined`
+|Add `loop:` when using `{{ item }}`
+|===
+=====
+======
+
+== Key Takeaways
+
+In this module, you learned:
+
+* ✅ Use `yamllint` to catch YAML syntax errors
+* ✅ Use `--syntax-check` for Ansible-specific validation
+* ✅ Follow the troubleshooting workflow systematically
+* ✅ Read error messages carefully - they point to the problem
+* ✅ Understand check mode limitations with service tasks
+* ✅ Fix broken playbooks using debugging tools
+* ✅ Run playbooks successfully after fixing errors
+
+== Lab Complete!
+
+Congratulations! You've completed the YAML Essentials for Ansible lab. You now have the skills to:
+
+* ✅ Write valid YAML with proper syntax and structure
+* ✅ Create Ansible inventories and playbooks
+* ✅ Use variables to make playbooks flexible
+* ✅ Debug common YAML errors effectively
+* ✅ Apply best practices for maintainable code
+
+======
+.📁 Your Final Lab Files
+[%collapsible]
+=====
+You've created in the `ansible-lab` folder:
+
+* `inventory.yml` - A structured inventory with groups and variables
+* `site.yml` - A documented playbook with variables and tasks
+* `broken*.yml` - Example files showing common errors
+* `debug-challenge.yml` - A practice debugging exercise (now fixed and working!)
+=====
+======
+
+======
+.🚀 Next Steps
+[%collapsible]
+=====
+Now that you know YAML fundamentals, you can:
+
+* Learn more Ansible modules at https://docs.ansible.com
+* Explore Ansible Automation Platform features
+* Build more complex playbooks with roles and includes
+* Practice writing playbooks for your own infrastructure
+
+Keep practicing, and remember: every YAML expert started where you are now!
+=====
+======
+
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
+If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======

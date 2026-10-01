@@ -1,3 +1,4 @@
+:sectnums:
 = Variables & Best Practices
 
 == Introduction
@@ -11,24 +12,29 @@ In this module, you will:
 * Write effective comments for documentation
 * Apply YAML best practices
 
-== Why Use Variables?
-
+======
+.📖 Why Use Variables?
+[%collapsible]
+=====
 Variables provide several benefits:
 
 * *Reusability:* Change a value once instead of in multiple places
 * *Flexibility:* Easily customize playbooks for different environments
 * *Readability:* Meaningful variable names make code self-documenting
 * *Maintainability:* Centralize configuration values
+=====
+======
 
-== Defining Variables
+== Hands-On Experience
 
-In Ansible playbooks, you define variables in the `vars:` section, which is a dictionary of key-value pairs.
+======
+.☑️ Task 1 - Add variables to your playbook
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
 
-=== Adding Variables to Your Playbook
+In Ansible playbooks, you define variables in the `vars:` section, which is a dictionary of key-value pairs. Let's refactor the playbook from Module 2 to use variables.
 
-Let's refactor the playbook from Module 2 to use variables:
-
-[arabic]
 . Update `site.yml` in VSCode to include a vars section. Replace all the content with:
 +
 [source,yaml]
@@ -58,55 +64,38 @@ Let's refactor the playbook from Module 2 to use variables:
         enabled: true
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
 . Notice the changes:
-
++
 * `vars:` section defines three variables
 * Variables use `{{ variable_name }}` syntax (Jinja2 template syntax)
 * Task names are more generic since the actual package name is in the variable
 
-[IMPORTANT]
-====
-*Variable Syntax - Jinja2 Templates:*
+IMPORTANT: *Variable Syntax - Jinja2 Templates:* When using variables in YAML values, you must use quotes around the entire value if it starts with a variable: `name: "{{ web_package }}"` is correct, but `name: {{ web_package }}` will cause a YAML parser error! The quotes tell the YAML parser this is a string, then Ansible evaluates the Jinja2 template inside.
+=====
+======
 
-When using variables in YAML values, you must use quotes around the entire value if it starts with a variable:
-
-*Correct:*
-[source,yaml]
-----
-name: "{{ web_package }}"     # ✅ Quoted
-----
-
-*Wrong:*
-[source,yaml]
-----
-name: {{ web_package }}        # ❌ YAML parser error!
-----
-
-The quotes tell the YAML parser this is a string, then Ansible evaluates the Jinja2 template inside.
-====
-
-=== Variable Naming Conventions
-
+======
+.📖 Variable Naming Conventions
+[%collapsible]
+=====
 Follow these best practices for variable names:
 
 * Use lowercase with underscores: `http_port`, `max_clients`
 * Make names descriptive: `web_package` not `pkg`
 * Avoid starting with numbers: `port_80` not `80_port`
 * Be consistent with casing throughout your playbook
+=====
+======
 
-=== Verify Variables Work
+======
+.☑️ Task 2 - Verify variables work
+[%collapsible]
+=====
+NOTE: Switch to the *Terminal* tab
 
-[arabic]
-. Check the playbook syntax in the integrated terminal:
-+
-[source,bash,role=execute]
-----
-ansible-playbook --syntax-check -i inventory.yml site.yml
-----
-
-. Verify the playbook still works with variables:
+. Check the playbook syntax:
 +
 [source,bash,role=execute]
 ----
@@ -114,14 +103,17 @@ ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 +
 The syntax check confirms your variables are properly formatted.
+=====
+======
 
-== Using Variables with Lists
+======
+.☑️ Task 3 - Use variables with lists (loops)
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
 
 Variables can also be lists, which is useful when you need to install multiple packages or perform similar actions on multiple items.
 
-=== Looping Over Variables
-
-[arabic]
 . Update `site.yml` in VSCode to install multiple packages. Replace all the content with:
 +
 [source,yaml]
@@ -155,24 +147,19 @@ Variables can also be lists, which is useful when you need to install multiple p
         enabled: true
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
 . The `web_packages` variable is now a list (using `-` for each item), and we use `loop:` to iterate over it.
 
-[NOTE]
-====
-*The `loop` Keyword:*
+NOTE: *The `loop` Keyword:* The `loop:` keyword tells Ansible to repeat the task for each item in the list. The special variable `{{ item }}` represents the current item in each iteration. This installs each package in the list one by one.
+=====
+======
 
-The `loop:` keyword tells Ansible to repeat the task for each item in the list. The special variable `{{ item }}` represents the current item in each iteration.
-
-This installs each package in the list one by one.
-====
-
-== Adding Comments
-
+======
+.📖 Comment Syntax
+[%collapsible]
+=====
 Comments make your YAML files more maintainable by explaining why decisions were made, documenting complex logic, or marking TODOs.
-
-=== Comment Syntax
 
 YAML comments begin with `#`. Everything after `#` on a line is ignored:
 
@@ -182,12 +169,17 @@ YAML comments begin with `#`. Everything after `#` on a line is ignored:
 vars:
   http_port: 80  # This is an inline comment
 ----
+=====
+======
 
-=== Effective Comments
+======
+.☑️ Task 4 - Add effective comments
+[%collapsible]
+=====
+NOTE: In the *VSCode Editor* tab
 
-Let's add documentation comments to the playbook:
+Let's add documentation comments to the playbook.
 
-[arabic]
 . Add meaningful comments to `site.yml` in VSCode. Replace all the content with:
 +
 [source,yaml]
@@ -235,29 +227,16 @@ Let's add documentation comments to the playbook:
         enabled: true  # Start automatically on system boot
 ----
 +
-Save the file.
+IMPORTANT: Save the file.
 
-[TIP]
-====
-*When to Add Comments:*
+TIP: *When to Add Comments:* Document the *purpose* of the playbook at the top. Explain *why* configuration choices were made. Clarify *complex* logic or non-obvious behavior. Mark sections as *TODO* for future work. Document *requirements* or *prerequisites*. Don't comment the obvious - for example, `# Installs httpd` is redundant when your task name already says "Install httpd"!
+=====
+======
 
-* Document the *purpose* of the playbook at the top
-* Explain *why* configuration choices were made
-* Clarify *complex* logic or non-obvious behavior
-* Mark sections as *TODO* for future work
-* Document *requirements* or *prerequisites*
-
-Don't comment the obvious:
-[source,yaml]
-----
-- name: Install httpd
-  ansible.builtin.package:
-    name: httpd      # Installs httpd  ❌ Task name already says this!
-----
-====
-
-=== Comment Best Practices
-
+======
+.📖 Comment Best Practices
+[%collapsible]
+=====
 [cols="1,2",options="header"]
 |===
 |Practice |Example
@@ -277,12 +256,15 @@ Don't comment the obvious:
 |Mark TODOs
 |`# TODO: Add SSL certificate configuration`
 |===
+=====
+======
 
-== YAML Best Practices Summary
-
+======
+.📖 YAML Best Practices Summary
+[%collapsible]
+=====
 Here are the key best practices you've learned:
 
-[arabic]
 . *Start files with `---`* to mark YAML document beginning
 . *Use 2 spaces for indentation* - never tabs
 . *Maintain consistent casing* in variable names
@@ -292,12 +274,17 @@ Here are the key best practices you've learned:
 . *Use `true`/`false`* for boolean values
 . *Avoid unnecessary quotes* on simple strings
 . *Keep playbooks readable* with blank lines between sections
+=====
+======
 
-=== Verify Your Work
+======
+.☑️ Task 5 - Verify your work
+[%collapsible]
+=====
+NOTE: Switch to the *Terminal* tab
 
-Let's ensure your documented playbook still works correctly using the integrated terminal:
+Let's ensure your documented playbook still works correctly.
 
-[arabic]
 . Syntax check:
 +
 [source,bash,role=execute]
@@ -325,9 +312,13 @@ grep -E "^  vars:" site.yml && echo "✅ vars section found"
 ----
 grep -c "^#\|  #" site.yml
 ----
+=====
+======
 
-== More Boolean Examples
-
+======
+.📖 More Boolean Examples
+[%collapsible]
+=====
 You've seen `become: true` and `enabled: true`. Here are other common boolean uses in Ansible:
 
 [source,yaml]
@@ -337,6 +328,8 @@ check_mode: true          # Run in dry-run mode
 ignore_errors: true       # Continue even if task fails
 changed_when: false       # Never report as "changed"
 ----
+=====
+======
 
 == Key Takeaways
 
@@ -353,3 +346,24 @@ In this module, you learned:
 * ✅ Document why, not what, in comments
 
 Your playbook is now flexible, well-documented, and follows Ansible best practices! In the next module, you'll learn how to debug common YAML errors and troubleshoot syntax issues.
+
+== Embracing the Next Challenge
+======
+.✅ Next Challenge
+[%collapsible]
+=====
+Once you've completed the tasks above, proceed to the next module to learn about common YAML errors.
+
+* Review your variable definitions and ensure they follow naming conventions
+* Make sure your comments document the "why" not the "what"
+* Take a moment to understand how loops work with list variables
+=====
+======
+
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
+If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======
