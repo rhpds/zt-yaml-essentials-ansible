@@ -69,21 +69,13 @@ Let's create a simple playbook that tests connectivity to your hosts and then in
 Save the file.
 
 . Notice the key elements:
++
 * `---` starts the YAML document
 * `- name:` defines the play (note the leading hyphen - this is a list!)
 * `hosts: webservers` targets the webservers group from your inventory
 * `tasks:` begins the task list
 * `- name: Ping all web servers` describes the task
 * `ansible.builtin.ping:` is the module to execute
-
-. Verify the playbook syntax in the integrated terminal:
-+
-[source,bash,role=execute]
-----
-ansible-playbook --syntax-check -i inventory.yml site.yml
-----
-+
-If the syntax is correct, you'll see: `playbook: site.yml`
 
 [NOTE]
 ====
@@ -96,24 +88,8 @@ The `ansible.builtin.ping` module tests connectivity to hosts. It's not an ICMP 
 
 Now let's execute the playbook using the integrated terminal.
 
-[NOTE]
-====
-*About Running This Playbook:*
-
-Make sure your `inventory.yml` includes the group vars from Module 1:
-
-[source,yaml]
-----
-all:
-  vars:
-    ansible_connection: local
-----
-
-This tells Ansible to run commands locally instead of via SSH.
-====
-
 [arabic]
-. First, validate the YAML syntax:
+. Validate the YAML syntax:
 +
 [source,bash,role=execute]
 ----
@@ -136,18 +112,6 @@ You should see:
 * `TASK [Install Apache web server]` - Installs httpd (yellow = changed)
 * `TASK [Start and enable Apache]` - Starts the service (yellow = changed)
 
-[WARNING]
-====
-*Why Not Use `--check` Mode?*
-
-The `--check` flag runs in dry-run mode, which *simulates* changes without making them. This works for the ping task, but fails for the service task because:
-
-1. Check mode simulates installing httpd (doesn't actually install)
-2. When trying to start the httpd service, it doesn't exist yet
-3. Result: `Could not find the requested service httpd`
-
-For this lab, run the playbook normally to see your YAML work!
-====
 
 [TIP]
 ====
