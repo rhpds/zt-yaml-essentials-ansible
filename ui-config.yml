@@ -17,7 +17,11 @@ antora:
       scripts: [setup, solve, validation]
       solveButton: true
     - name: module-04
-      label: "Debugging YAML"
+      label: "Common YAML Errors"
+      scripts: [setup, solve, validation]
+      solveButton: true
+    - name: module-05
+      label: "Debugging Your Playbook"
       scripts: [setup, solve, validation]
       solveButton: true
 

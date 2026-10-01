@@ -40,7 +40,7 @@ Write a working Ansible playbook with multiple tasks.
 * Module parameters and FQCN (Fully Qualified Collection Names)
 * Boolean values (`become: true`)
 
-=== Module 3: Variables & Best Practices (10 min)
+=== Module 3: Variables & Best Practices (8 min)
 
 Make playbooks flexible with variables and proper documentation.
 
@@ -50,15 +50,24 @@ Make playbooks flexible with variables and proper documentation.
 * Add comments for documentation
 * Apply YAML best practices
 
-=== Module 4: Debugging YAML (10 min)
+=== Module 4: Common YAML Errors (6 min)
 
-Identify and fix common YAML errors.
+Identify and fix the five most common YAML syntax errors.
 
 * Fix indentation problems
-* Catch tabs vs spaces issues
+* Detect tabs vs spaces issues
 * Debug case sensitivity errors
-* Handle quote requirements
-* Use `yamllint` and `ansible-playbook --syntax-check`
+* Handle missing or incorrect quotes
+* Catch missing colons
+
+=== Module 5: Debugging Your Playbook (6 min)
+
+Master debugging tools and fix a broken playbook.
+
+* Use `yamllint` to catch YAML syntax errors
+* Use `ansible-playbook --syntax-check` for Ansible-specific validation
+* Follow a systematic troubleshooting workflow
+* Fix a deliberately broken playbook and get it running
 
 == What You'll Build
 
@@ -102,7 +111,8 @@ The lab uses example hostnames (web1.example.com, web2.example.com, db1.example.
         │   ├── module-01.adoc  # YAML Fundamentals
         │   ├── module-02.adoc  # Your First Playbook
         │   ├── module-03.adoc  # Variables & Best Practices
-        │   └── module-04.adoc  # Debugging YAML
+        │   ├── module-04.adoc  # Common YAML Errors
+        │   └── module-05.adoc  # Debugging Your Playbook
 ----
 
 == Development
@@ -144,7 +154,10 @@ antora:
       label: "Variables & Best Practices"
       solveButton: true
     - name: module-04
-      label: "Debugging YAML"
+      label: "Common YAML Errors"
+      solveButton: true
+    - name: module-05
+      label: "Debugging Your Playbook"
       solveButton: true
 ----
 
