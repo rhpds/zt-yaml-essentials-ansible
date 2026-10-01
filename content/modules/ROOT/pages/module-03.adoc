@@ -106,12 +106,14 @@ Follow these best practices for variable names:
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
-. Run in check mode to see how variables are evaluated:
+. Verify the playbook still works with variables:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --check -i inventory.yml site.yml
+ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
++
+The syntax check confirms your variables are properly formatted.
 
 == Using Variables with Lists
 

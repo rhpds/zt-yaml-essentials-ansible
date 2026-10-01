@@ -149,29 +149,33 @@ Let's create a proper inventory with host groups:
 ----
 ---
 all:
+  vars:
+    ansible_connection: local
   children:
     webservers:
       hosts:
         web1.example.com:
-          ansible_connection: local
         web2.example.com:
-          ansible_connection: local
     databases:
       hosts:
         db1.example.com:
-          ansible_connection: local
 ----
 +
 Save the file.
 +
 [NOTE]
 ====
-The `ansible_connection: local` setting tells Ansible to run commands on the local machine rather than connecting via SSH. This allows you to test your playbooks even though these are example hostnames.
+*Understanding Group Variables:*
+
+The `vars:` section under `all:` applies the `ansible_connection: local` setting to all hosts in the inventory. This tells Ansible to run commands on the local machine rather than connecting via SSH.
+
+Group variables affect all hosts without repeating them individually.
 ====
 
 . This inventory now has:
 +
 * `all:` - A top-level dictionary key
+* `vars:` - Variables that apply to all hosts
 * `children:` - A nested dictionary defining groups
 * `webservers:` and `databases:` - Group names (dictionary keys)
 * `hosts:` - Another nested dictionary containing host lists
@@ -192,6 +196,7 @@ This command shows how Ansible interprets your YAML inventory structure.
 Notice the structure uses 2 spaces per level:
 
 * `all:` - 0 spaces (top level)
+* `vars:` - 2 spaces (nested under `all`)
 * `children:` - 2 spaces (nested under `all`)
 * `webservers:` - 4 spaces (nested under `children`)
 * `hosts:` - 6 spaces (nested under `webservers`)
@@ -212,21 +217,20 @@ Let's add some host variables to demonstrate:
 ----
 ---
 all:
+  vars:
+    ansible_connection: local
   children:
     webservers:
       hosts:
         web1.example.com:
-          ansible_connection: local
           http_port: 80
           max_clients: 200
         web2.example.com:
-          ansible_connection: local
           http_port: 8080
           max_clients: 150
     databases:
       hosts:
         db1.example.com:
-          ansible_connection: local
           db_port: 5432
 ----
 +

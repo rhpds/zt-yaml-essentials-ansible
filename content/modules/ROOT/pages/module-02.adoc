@@ -94,35 +94,60 @@ The `ansible.builtin.ping` module tests connectivity to hosts. It's not an ICMP 
 
 === Running Your Playbook
 
-Now let's execute the playbook using the integrated terminal:
-
-[arabic]
-. Run the playbook in check mode first (dry run):
-+
-[source,bash,role=execute]
-----
-ansible-playbook --check -i inventory.yml site.yml
-----
-+
-Check mode shows what would happen without making changes.
+Now let's execute the playbook using the integrated terminal.
 
 [NOTE]
 ====
 *About Running This Playbook:*
 
-Since your inventory uses `ansible_connection: local`, this playbook will run on your lab machine (host1). The tasks target `web1.example.com` and `web2.example.com`, but those hostnames resolve to localhost (127.0.0.1) and run locally.
+Make sure your `inventory.yml` includes the group vars from Module 1:
 
-For this YAML learning lab, you'll primarily use `--syntax-check` to validate your YAML. Actually running the playbook will attempt to install and configure Apache on the lab host.
+[source,yaml]
+----
+all:
+  vars:
+    ansible_connection: local
+----
+
+This tells Ansible to run commands locally instead of via SSH.
 ====
 
-. Run the playbook for real (optional - for syntax validation, use `--syntax-check` instead):
+[arabic]
+. First, validate the YAML syntax:
++
+[source,bash,role=execute]
+----
+ansible-playbook --syntax-check -i inventory.yml site.yml
+----
++
+If successful, you'll see: `playbook: site.yml`
+
+. Run the playbook to execute the tasks:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook -i inventory.yml site.yml
 ----
 +
-You should see output showing each task executing and whether it succeeded.
+You should see:
++
+* `TASK [Gathering Facts]` - Collects system information
+* `TASK [Ping all web servers]` - Tests connectivity (green = success)
+* `TASK [Install Apache web server]` - Installs httpd (yellow = changed)
+* `TASK [Start and enable Apache]` - Starts the service (yellow = changed)
+
+[WARNING]
+====
+*Why Not Use `--check` Mode?*
+
+The `--check` flag runs in dry-run mode, which *simulates* changes without making them. This works for the ping task, but fails for the service task because:
+
+1. Check mode simulates installing httpd (doesn't actually install)
+2. When trying to start the httpd service, it doesn't exist yet
+3. Result: `Could not find the requested service httpd`
+
+For this lab, run the playbook normally to see your YAML work!
+====
 
 [TIP]
 ====
@@ -280,21 +305,16 @@ ansible-doc ansible.builtin.package
 Let's test your playbook using the integrated terminal:
 
 [arabic]
-. Run a syntax check:
+. Verify your YAML syntax is valid:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
-
-. Check the playbook in dry-run mode:
 +
-[source,bash,role=execute]
-----
-ansible-playbook --check -i inventory.yml site.yml
-----
+Should output: `playbook: site.yml`
 
-. Count the number of tasks:
+. Count the number of tasks in your playbook:
 +
 [source,bash,role=execute]
 ----
@@ -302,6 +322,15 @@ grep -c "^    - name:" site.yml
 ----
 +
 You should see `3` (three tasks).
+
+. Verify your inventory structure:
++
+[source,bash,role=execute]
+----
+ansible-inventory -i inventory.yml --list
+----
++
+This shows how Ansible interprets your inventory, including all groups and variables.
 
 == Key Takeaways
 
