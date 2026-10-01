@@ -28,6 +28,13 @@ usermod -aG wheel ${LAB_USER}
 echo "Creating workspace directory at ${WORKSPACE}..."
 install -d -o "${LAB_USER}" -g "${LAB_USER}" -m 0755 "${WORKSPACE}"
 
+# Add lab hostnames to /etc/hosts for Ansible inventory
+echo "Adding lab hostnames to /etc/hosts..."
+if ! grep -q "web1.example.com" /etc/hosts; then
+    echo "127.0.0.1 web1.example.com web2.example.com db1.example.com" >> /etc/hosts
+    echo "Lab hostnames added to /etc/hosts"
+fi
+
 # Verify ansible and yamllint are installed
 echo "Verifying tools..."
 if ! command -v ansible &> /dev/null; then

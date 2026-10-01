@@ -89,7 +89,7 @@ If the syntax is correct, you'll see: `playbook: site.yml`
 ====
 *What is `ansible.builtin.ping`?*
 
-The `ansible.builtin.ping` module tests connectivity to hosts. It's not an ICMP ping - it actually connects via SSH and verifies Python is available. It's a great way to test your inventory and connectivity.
+The `ansible.builtin.ping` module tests connectivity to hosts. It's not an ICMP ping - it verifies Ansible can execute tasks on the target. Since your inventory uses `ansible_connection: local`, this will test local execution instead of SSH.
 ====
 
 === Running Your Playbook
@@ -106,7 +106,16 @@ ansible-playbook --check -i inventory.yml site.yml
 +
 Check mode shows what would happen without making changes.
 
-. Run the playbook for real:
+[NOTE]
+====
+*About Running This Playbook:*
+
+Since your inventory uses `ansible_connection: local`, this playbook will run on your lab machine (host1). The tasks target `web1.example.com` and `web2.example.com`, but those hostnames resolve to localhost (127.0.0.1) and run locally.
+
+For this YAML learning lab, you'll primarily use `--syntax-check` to validate your YAML. Actually running the playbook will attempt to install and configure Apache on the lab host.
+====
+
+. Run the playbook for real (optional - for syntax validation, use `--syntax-check` instead):
 +
 [source,bash,role=execute]
 ----

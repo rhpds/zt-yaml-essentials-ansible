@@ -153,13 +153,21 @@ all:
     webservers:
       hosts:
         web1.example.com:
+          ansible_connection: local
         web2.example.com:
+          ansible_connection: local
     databases:
       hosts:
         db1.example.com:
+          ansible_connection: local
 ----
 +
 Save the file.
++
+[NOTE]
+====
+The `ansible_connection: local` setting tells Ansible to run commands on the local machine rather than connecting via SSH. This allows you to test your playbooks even though these are example hostnames.
+====
 
 . This inventory now has:
 +
@@ -208,14 +216,17 @@ all:
     webservers:
       hosts:
         web1.example.com:
+          ansible_connection: local
           http_port: 80
           max_clients: 200
         web2.example.com:
+          ansible_connection: local
           http_port: 8080
           max_clients: 150
     databases:
       hosts:
         db1.example.com:
+          ansible_connection: local
           db_port: 5432
 ----
 +

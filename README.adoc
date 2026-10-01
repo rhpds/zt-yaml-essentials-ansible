@@ -64,9 +64,14 @@ Identify and fix common YAML errors.
 
 Throughout the lab, you'll create:
 
-* `~/ansible-lab/inventory.yml` - A structured inventory with webserver and database groups
-* `~/ansible-lab/site.yml` - A documented playbook that installs and configures Apache
+* `inventory.yml` - A structured inventory with webserver and database groups
+* `site.yml` - A documented playbook that installs and configures Apache
 * Multiple example files demonstrating common errors and their fixes
+
+[NOTE]
+====
+The lab uses example hostnames (web1.example.com, web2.example.com, db1.example.com) that resolve to localhost, allowing you to test your YAML syntax with real Ansible execution.
+====
 
 == Technical Details
 
