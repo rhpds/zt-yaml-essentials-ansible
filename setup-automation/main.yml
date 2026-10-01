@@ -1,77 +1,72 @@
 ---
+# Setup automation orchestrator
+# This playbook is executed by Zero Touch to set up the lab environment.
+# It copies and runs host-specific setup scripts.
+
 - name: Create inventory
   hosts: localhost
   gather_facts: false
   tasks:
-  - name: Add bastion host
-    ansible.builtin.add_host:
-      name: "{{ lookup('ansible.builtin.env', 'BASTION_HOST') }}"
-      ansible_ssh_host: "{{ lookup('ansible.builtin.env', 'BASTION_HOST') }}"
-      ansible_ssh_port: "{{ lookup('ansible.builtin.env', 'BASTION_PORT') }}"
-      ansible_ssh_user: "{{ lookup('ansible.builtin.env', 'BASTION_USER') }}"
-      ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'BASTION_PASSWORD') }}"
-- name: Demo Playbook for the ansible-runner API
+    - name: Add host1 to inventory
+      ansible.builtin.add_host:
+        name: host1
+        ansible_host: "{{ lookup('env', 'HOST1_HOST') | default('host1', true) }}"
+        ansible_port: "{{ lookup('env', 'HOST1_PORT') | default('22', true) }}"
+        ansible_user: "{{ lookup('env', 'HOST1_USER') | default('rhel', true) }}"
+        ansible_ssh_pass: "{{ lookup('env', 'HOST1_PASSWORD') | default('ansible123!', true) }}"
+        ansible_become_password: "{{ lookup('env', 'HOST1_PASSWORD') | default('ansible123!', true) }}"
+        groups: lab_hosts
+
+- name: Run setup scripts on lab hosts
   hosts: all:!localhost
   gather_facts: false
   tasks:
+    - name: Wait for SSH to be available
+      ansible.builtin.wait_for_connection:
+        timeout: 300
+        delay: 5
 
-  - ansible.builtin.wait_for_connection:
-  - name: Simple debug task
-    ansible.builtin.debug:
-      msg: "Hello Runner"
+    - name: Check if setup script exists for this host
+      delegate_to: localhost
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/setup-{{ inventory_hostname }}.sh"
+      register: setup_script
 
-  - name: Set config_host variable with ansible_host value
-    set_fact:
-      config_host: "{{ ansible_host }}"
+    - name: Display setup script status
+      ansible.builtin.debug:
+        msg: "Setup script for {{ inventory_hostname }}: {{ 'found' if setup_script.stat.exists else 'not found' }}"
 
-  - name: Create a directory if it does not exist
-    ansible.builtin.file:
-      path: "/tmp/setup-scripts/"
-      state: directory
-      mode: '0755'
+    - name: Copy setup script to host
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/setup-{{ inventory_hostname }}.sh"
+        dest: "/tmp/setup-{{ inventory_hostname }}.sh"
+        mode: '0755'
+      when: setup_script.stat.exists
+      become: true
 
-  - name: Check if setup-server.sh exists
-    ansible.builtin.stat:
-      path: "./setup-{{ config_host }}.sh"
-    delegate_to: localhost
-    register: r_script_test
+    - name: Execute setup script
+      ansible.builtin.shell: |
+        /tmp/setup-{{ inventory_hostname }}.sh 2>&1 | tee /var/log/setup-{{ inventory_hostname }}.log
+      become: true
+      register: setup_output
+      when: setup_script.stat.exists
 
-  - name: Copy script file
-    when: r_script_test.stat.exists
-    copy:
-      src: "./setup-{{ ansible_host }}.sh"
-      dest: "/tmp/setup-scripts/setup-{{ ansible_host }}.sh"
-    register: r_result
+    - name: Display setup output
+      ansible.builtin.debug:
+        var: setup_output.stdout_lines
+      when: setup_script.stat.exists
 
-  - name: Execute module_stage-host.sh if it exists
-    when: r_script_test.stat.exists
-    shell: "sh -x /tmp/setup-scripts/setup-{{ ansible_host }}.sh > /tmp/setup-scripts/setup-{{ ansible_host }}.log 2>&1"
-    become: true
-    register: r_result
+    - name: Save setup output locally
+      delegate_to: localhost
+      ansible.builtin.copy:
+        content: "{{ setup_output.stdout }}"
+        dest: "{{ playbook_dir }}/setup-{{ inventory_hostname }}.out"
+        mode: '0644'
+      when: setup_script.stat.exists
 
-  - name: Output script result
-    ansible.builtin.debug:
-      var: r_result.stdout
-    when: r_script_test.stat.exists
-
-  - name: Write script result to file
-    ansible.builtin.copy:
-      content: "{{ r_result.stdout | default(r_result.stderr) | default(r_result) }}"
-      dest: "/tmp/{{ ansible_host }}-setup-script.out"
-    delegate_to: localhost
-    when:
-    - r_result is defined
-
-  - name: Output script result
-    ansible.builtin.debug:
-      var: r_result
-    when: r_result is defined
-
-  - name: Fail if stage was failed
-    ansible.builtin.fail:
-      msg: "Setup failed"
-    when:
-    - r_result is defined
-    - r_result is not skipped
-    - r_result.rc is defined
-    - r_result.rc != 0
+    - name: Fail if setup script had errors
+      ansible.builtin.fail:
+        msg: "Setup script failed with return code {{ setup_output.rc }}"
+      when:
+        - setup_script.stat.exists
+        - setup_output.rc != 0
