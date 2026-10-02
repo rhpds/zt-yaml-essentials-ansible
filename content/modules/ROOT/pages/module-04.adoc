@@ -217,20 +217,6 @@ yamllint broken5.yml
 =====
 ======
 
-== Key Takeaways
-
-In this module, you learned:
-
-* ✅ Use *2 spaces* for indentation, never tabs
-* ✅ YAML is *case-sensitive* - match variable names exactly
-* ✅ Quote variables at the start of values: `"{{ var }}"`
-* ✅ Every dictionary key needs a colon: `key:`
-* ✅ Use `yamllint` to catch YAML syntax errors
-* ✅ Common errors follow predictable patterns
-* ✅ Read error messages carefully - they point to the problem
-
-In the next module, you'll learn how to use debugging tools and fix a broken playbook to get it running!
-
 ======
 .✅ Next Challenge
 [%collapsible]

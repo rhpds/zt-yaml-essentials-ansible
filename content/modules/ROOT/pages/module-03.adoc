@@ -269,22 +269,6 @@ ignore_errors: true       # Continue even if task fails
 changed_when: false       # Never report as "changed"
 ----
 
-== Key Takeaways
-
-In this module, you learned:
-
-* ✅ Define variables in the `vars:` section as key-value pairs
-* ✅ Reference variables with `"{{ variable_name }}"` syntax
-* ✅ Quote strings that start with variables
-* ✅ Use lists for variables with multiple values
-* ✅ Use `loop:` to iterate over list variables
-* ✅ Add comments with `#` for documentation
-* ✅ Follow naming conventions: lowercase with underscores
-* ✅ Use `true`/`false` for boolean values
-* ✅ Document why, not what, in comments
-
-Your playbook is now flexible, well-documented, and follows Ansible best practices! In the next module, you'll learn how to debug common YAML errors and troubleshoot syntax issues.
-
 ======
 .✅ Next Challenge
 [%collapsible]

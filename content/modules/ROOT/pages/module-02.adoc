@@ -10,7 +10,7 @@ In this module, you will:
 * Learn the structure of an Ansible playbook
 * Understand plays, tasks, and modules
 * Write and run a simple connectivity test
-* Add tasks to install and configure Apache web server
+* Add multiple tasks using different Ansible modules
 
 == Understanding Playbook Structure
 
@@ -123,18 +123,18 @@ Most modules need parameters to know what to do. Parameters are written as key-v
 
 [source,yaml]
 ----
+ansible.builtin.debug:
+  msg: "Hello World"   # The message to display
+----
+
+[source,yaml]
+----
 ansible.builtin.package:
   name: httpd          # Which package to install
   state: present       # present = installed, absent = removed
 ----
 
-[source,yaml]
-----
-ansible.builtin.service:
-  name: httpd          # Which service to manage
-  state: started       # started, stopped, or restarted
-  enabled: true        # Start on boot (true/false)
-----
+Different modules have different parameters. The `debug` module shows messages, the `package` module manages software, etc.
 
 [TIP]
 ====
@@ -142,68 +142,47 @@ To see all parameters for any module, use:
 
 [source,bash]
 ----
+ansible-doc ansible.builtin.debug
 ansible-doc ansible.builtin.package
 ----
 ====
 
-== Building a Real Automation
+== Building on Your Playbook
 
-Now let's expand your playbook to actually do something useful: install and configure Apache web server.
-
-=== Understanding Privilege Escalation
-
-Installing packages and managing services requires administrator privileges. In Ansible, we use `become: true` to run tasks with elevated permissions (like using `sudo`).
-
-=== Boolean Values in YAML
-
-You'll see several boolean (true/false) values in our playbook:
-
-* Use `true` and `false` (lowercase)
-* Ansible also accepts `yes`/`no`, but `true`/`false` is the standard
-
-[source,yaml]
-----
-become: true         # ✅ Recommended
-enabled: true        # ✅ Recommended
-become: yes          # ✅ Works, but not preferred
-----
+Now let's expand your playbook with multiple tasks and different module types to see how they work together.
 
 ======
-.☑️ Task 3 - Add Apache installation and configuration
+.☑️ Task 3 - Add multiple tasks with different modules
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
 
-Now let's expand your playbook to install Apache. Update your `site.yml` file to match this:
+Now let's expand your playbook with multiple tasks to show how different modules work. Update your `site.yml` file to match this:
 
 [source,yaml]
 ----
 ---
 - name: Configure web servers
   hosts: webservers
-  become: true
   tasks:
     - name: Ping all web servers
       ansible.builtin.ping:
 
-    - name: Install Apache web server
-      ansible.builtin.package:
-        name: httpd
-        state: present
+    - name: Show server hostname
+      ansible.builtin.debug:
+        msg: "Running on {{ inventory_hostname }}"
 
-    - name: Start and enable Apache
-      ansible.builtin.service:
-        name: httpd
-        state: started
-        enabled: true
+    - name: Display welcome message
+      ansible.builtin.debug:
+        msg: "Welcome to the YAML Essentials lab!"
 ----
 
 What changed?
 
-* Added `become: true` to run tasks with admin privileges
 * Kept the ping task to verify connectivity first
-* Added a task to install the `httpd` package
-* Added a task to start Apache and enable it to run on boot
+* Added a task using the `debug` module with a variable
+* Added another debug task with a simple message
+* Each task demonstrates different module parameters
 =====
 ======
 
@@ -230,8 +209,10 @@ ansible-playbook -i inventory.yml site.yml
 Watch as Ansible executes each task in order:
 
 . ✅ Pings the web servers
-. ✅ Installs Apache (httpd package)
-. ✅ Starts and enables the Apache service
+. ✅ Shows the hostname for each server
+. ✅ Displays the welcome message
+
+You should see output showing each task executing successfully on both web servers. Notice how the hostname changes for each server - that's the `{{ inventory_hostname }}` variable in action!
 
 [NOTE]
 ====
@@ -241,49 +222,16 @@ If any task fails, Ansible stops executing on that host. This prevents partial c
 ======
 
 ======
-.☑️ Task 5 - Verify Apache is running
-[%collapsible]
-=====
-NOTE: Switch to the *Terminal* tab
-
-Let's confirm Apache is actually running:
-
-[source,bash,role=execute]
-----
-curl http://localhost
-----
-
-You should see Apache's default HTML page! This confirms your playbook successfully installed and started the web server.
-=====
-======
-
-== Key Takeaways
-
-In this module, you learned:
-
-* ✅ Playbooks start with `---` and contain one or more plays
-* ✅ Each play targets specific hosts and contains a list of tasks
-* ✅ Tasks execute in order from top to bottom
-* ✅ Modules are the building blocks that perform actual work
-* ✅ Module parameters are key-value pairs that tell modules what to do
-* ✅ Use `become: true` to run tasks with administrator privileges
-* ✅ Use `true`/`false` for boolean values in YAML
-* ✅ Always validate syntax with `--syntax-check` before running
-* ✅ Use FQCN (Fully Qualified Collection Names) like `ansible.builtin.ping`
-
-You've created a working Ansible playbook that installs and configures Apache web server! In the next module, you'll learn how to use variables to make your playbooks more flexible and reusable.
-
-======
 .✅ Next Challenge
 [%collapsible]
 =====
-You've just automated the installation and configuration of a web server with just a few lines of YAML! Before moving to the next module:
+You've just created a working Ansible playbook with multiple tasks! Before moving to the next module:
 
 * Review how the YAML structure creates a clear, readable automation workflow
 * Notice how each task builds on the previous one
-* Think about how you could adapt this playbook for different packages or services
+* See how the `{{ inventory_hostname }}` variable shows different values per server
 
-In the next module, you'll learn how variables can make this playbook even more flexible and reusable.
+In the next module, you'll learn how to define and use your own variables to make playbooks even more flexible and reusable.
 =====
 ======
 

@@ -216,20 +216,6 @@ ansible databases -i inventory.yml --list-hosts
 =====
 ======
 
-== Key Takeaways
-
-In this module, you learned:
-
-* ✅ YAML uses `.yml` extension and often starts with `---`
-* ✅ YAML is *case-sensitive* - maintain consistent casing
-* ✅ Use *2 spaces* for indentation (never tabs)
-* ✅ *Scalars* are simple values (strings, numbers)
-* ✅ *Lists* use leading hyphens (`-`) to define sequences
-* ✅ *Dictionaries* use `key: value` pairs for structured data
-* ✅ Nested structures use consistent indentation
-
-You've created a valid Ansible inventory file with hosts, groups, and variables. In the next module, you'll write your first playbook using this inventory!
-
 ======
 .✅ Next Challenge
 [%collapsible]

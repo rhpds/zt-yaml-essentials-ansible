@@ -229,14 +229,35 @@ If it runs successfully, congratulations! You've debugged a complex broken playb
 
 == Key Takeaways
 
-In this module, you:
+Congratulations on completing YAML Essentials for Ansible! Here's everything you've mastered:
 
-* ✅ Mastered `yamllint` for YAML syntax validation
-* ✅ Used `--syntax-check` for Ansible-specific validation
-* ✅ Followed a systematic troubleshooting workflow
-* ✅ Debugged a complex playbook with multiple errors
-* ✅ Applied all your YAML knowledge to fix a real-world broken playbook
-* ✅ Got a broken playbook running successfully - the ultimate test!
+**YAML Fundamentals:**
+* ✅ YAML uses `.yml` extension and starts with `---`
+* ✅ YAML is case-sensitive - maintain consistent casing
+* ✅ Use 2 spaces for indentation (never tabs!)
+* ✅ Scalars, lists, and dictionaries are the building blocks
+* ✅ Nested structures require consistent indentation
+
+**Ansible Playbooks:**
+* ✅ Playbooks contain plays that target specific hosts
+* ✅ Tasks execute in order from top to bottom
+* ✅ Modules are the building blocks that perform actual work
+* ✅ Use `become: true` for privilege escalation
+* ✅ Use FQCN (Fully Qualified Collection Names)
+
+**Variables & Best Practices:**
+* ✅ Define variables in `vars:` section as key-value pairs
+* ✅ Reference variables with `"{{ variable_name }}"` syntax
+* ✅ Use `loop:` to iterate over list variables
+* ✅ Follow naming conventions: lowercase with underscores
+* ✅ Document why, not what, in comments
+
+**Debugging & Troubleshooting:**
+* ✅ Use `yamllint` to catch YAML syntax errors
+* ✅ Use `--syntax-check` for Ansible-specific validation
+* ✅ Follow a systematic troubleshooting workflow
+* ✅ Read error messages carefully - they point to the problem
+* ✅ **Debug complex playbooks with multiple errors** - you did it!
 
 == 🎉 Lab Complete!
 
