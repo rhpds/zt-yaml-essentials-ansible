@@ -12,6 +12,9 @@ echo "Starting module called module-05" >> /tmp/progress.log
 # 7. Tabs instead of spaces on third task
 # 8. Case mismatch: Service_Port defined, service_port used
 # 9. Extra indentation on fourth task
+#
+# NOTE: this playbook deliberately uses only ping and debug so that learners can
+# actually run it successfully once fixed. Package/service tasks fail on this host.
 
 cat > /home/rhel/ansible-lab/debug-challenge.yml << 'EOF'
 - name: Final Debugging Challenge
@@ -20,23 +23,20 @@ cat > /home/rhel/ansible-lab/debug-challenge.yml << 'EOF'
     Package_Name: httpd
     Service_Port: 80
   tasks
-  - name: Install web server
-    ansible.builtin.package:
-      name: {{ package_name }}
-      state: present
+  - name: Check connectivity
+    ansible.builtin.ping:
 
-   - name: Start the service
-     ansible.builtin.service:
-       name: httpd
-       state: started
+   - name: Show the package name
+     ansible.builtin.debug:
+       msg: {{ package_name }}
 
 	- name: Show port number
 	  ansible.builtin.debug:
-	    msg: "Running on port {{ service_port }}"
+	    msg: "Running on {{ service_port }}"
 
-    - name: Final message
-      ansible.builtin.debug:
-        msg: "Congratulations - you fixed all the errors!"
+      - name: Final message
+        ansible.builtin.debug:
+          msg: "Congratulations - you fixed all the errors!"
 EOF
 
 echo "Created debug-challenge.yml with multiple errors for final challenge" >> /tmp/progress.log

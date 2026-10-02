@@ -16,7 +16,7 @@ EOF
 
 echo "Created broken1.yml with indentation errors" >> /tmp/progress.log
 
-# Create broken3.yml with case sensitivity error
+# Create broken2.yml with case sensitivity error
 cat > /home/rhel/ansible-lab/broken2.yml << 'EOF'
 ---
 - name: Case sensitivity problem
@@ -31,7 +31,7 @@ EOF
 
 echo "Created broken2.yml with case sensitivity error" >> /tmp/progress.log
 
-# Create broken4.yml with missing quotes
+# Create broken3.yml with missing quotes
 cat > /home/rhel/ansible-lab/broken3.yml << 'EOF'
 ---
 - name: Quote problems
@@ -47,7 +47,7 @@ EOF
 
 echo "Created broken3.yml with missing quotes" >> /tmp/progress.log
 
-# Create broken5.yml with missing colon
+# Create broken4.yml with missing colon
 cat > /home/rhel/ansible-lab/broken4.yml << 'EOF'
 ---
 - name: Missing colon

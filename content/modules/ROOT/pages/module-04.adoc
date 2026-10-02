@@ -15,7 +15,7 @@ In this module, you will:
 
 [NOTE]
 ====
-For this module, we've pre-loaded five broken YAML files (`broken1.yml` through `broken4.yml`) in your `ansible-lab` folder. Each file contains a different type of common error for you to identify and fix.
+For this module, we've pre-loaded four broken YAML files (`broken1.yml` through `broken4.yml`) in your `ansible-lab` folder. Each file contains a different type of common error for you to identify and fix.
 ====
 
 == Hands-On Experience
