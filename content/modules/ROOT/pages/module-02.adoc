@@ -67,8 +67,6 @@ NOTE: In the *VSCode Editor* tab
     - name: Ping all web servers
       ansible.builtin.ping:
 ----
-+
-. Save the file
 
 Let's break down what this playbook does:
 
@@ -206,8 +204,6 @@ What changed?
 * Kept the ping task to verify connectivity first
 * Added a task to install the `httpd` package
 * Added a task to start Apache and enable it to run on boot
-
-Save the file when you're done.
 =====
 ======
 
@@ -277,8 +273,10 @@ In this module, you learned:
 
 You've created a working Ansible playbook that installs and configures Apache web server! In the next module, you'll learn how to use variables to make your playbooks more flexible and reusable.
 
-== Embracing the Next Challenge
-
+======
+.✅ Next Challenge
+[%collapsible]
+=====
 You've just automated the installation and configuration of a web server with just a few lines of YAML! Before moving to the next module:
 
 * Review how the YAML structure creates a clear, readable automation workflow
@@ -286,7 +284,13 @@ You've just automated the installation and configuration of a web server with ju
 * Think about how you could adapt this playbook for different packages or services
 
 In the next module, you'll learn how variables can make this playbook even more flexible and reusable.
+=====
+======
 
-== Encountered an issue?
-
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======

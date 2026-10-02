@@ -55,8 +55,6 @@ web1.example.com
 web2.example.com
 db1.example.com
 ----
-+
-. Save the file (`Ctrl+S` or `Cmd+S`)
 =====
 ======
 
@@ -92,8 +90,6 @@ hosts:
   - web2.example.com
   - db1.example.com
 ----
-+
-. Save the file
 =====
 ======
 
@@ -133,8 +129,6 @@ all:
       hosts:
         db1.example.com:
 ----
-+
-. Save the file
 
 [NOTE]
 ====
@@ -184,8 +178,6 @@ all:
         db1.example.com:
           db_port: 5432
 ----
-+
-. Save the file
 
 WARNING: YAML is case-sensitive! `http_port` and `HTTP_PORT` are different variables.
 =====
@@ -234,14 +226,22 @@ In this module, you learned:
 
 You've created a valid Ansible inventory file with hosts, groups, and variables. In the next module, you'll write your first playbook using this inventory!
 
-== Embracing the Next Challenge
-
+======
+.✅ Next Challenge
+[%collapsible]
+=====
 Once you've completed the tasks above, proceed to the next module to learn how to write your first Ansible playbook.
 
 * Review your inventory structure and ensure all hosts are properly defined
 * Make sure you understand the difference between scalars, lists, and dictionaries
 * Take a moment to understand the importance of consistent indentation and casing
+=====
+======
 
-== Encountered an issue?
-
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======

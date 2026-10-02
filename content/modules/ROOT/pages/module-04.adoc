@@ -14,16 +14,21 @@ In this module, you will:
 * Fix quote-related errors
 * Catch missing colons
 
+[NOTE]
+====
+For this module, we've pre-loaded five broken YAML files (`broken1.yml` through `broken5.yml`) in your `ansible-lab` folder. Each file contains a different type of common error for you to identify and fix.
+====
+
 == Hands-On Experience
 
 ======
 .☑️ Task 1 - Fix indentation problems
 [%collapsible]
 =====
-NOTE: In the *VSCode Editor* tab
+The file `broken1.yml` has intentional indentation errors. Let's find and fix them.
 
-. Create `broken1.yml` with intentional indentation errors:
-+
+Here's what's in the file:
+
 [source,yaml]
 ----
 ---
@@ -36,10 +41,8 @@ NOTE: In the *VSCode Editor* tab
      ansible.builtin.debug:
        msg: "Wrong indent"
 ----
-+
-. Save the file
 
-. Switch to *Terminal* and check the syntax:
+. Switch to *Terminal* tab and check the syntax:
 +
 [source,bash,role=execute]
 ----
@@ -62,7 +65,6 @@ yamllint broken1.yml
         msg: "Correct indent"
 ----
 +
-. Save the file
 
 . Switch to *Terminal* and verify:
 +
@@ -77,16 +79,9 @@ yamllint broken1.yml
 .☑️ Task 2 - Detect tabs instead of spaces
 [%collapsible]
 =====
-NOTE: Switch to the *Terminal* tab
+The file `broken2.yml` contains tab characters instead of spaces. YAML requires spaces for indentation.
 
-. Create a file with tab characters:
-+
-[source,bash,role=execute]
-----
-printf "---\n- name: Broken tabs example\n  hosts: webservers\n  tasks:\n\t- name: Task with tab\n\t  ansible.builtin.ping:\n" > broken2.yml
-----
-
-. Validate it:
+. Switch to *Terminal* tab and validate it:
 +
 [source,bash,role=execute]
 ----
@@ -105,7 +100,6 @@ yamllint broken2.yml
       ansible.builtin.ping:
 ----
 +
-. Save the file
 
 . Switch to *Terminal* and verify:
 +
@@ -120,10 +114,10 @@ yamllint broken2.yml
 .☑️ Task 3 - Fix case sensitivity issues
 [%collapsible]
 =====
-NOTE: In the *VSCode Editor* tab
+The file `broken3.yml` has a case sensitivity error. The variable is defined as `http_port` but referenced as `HTTP_PORT`.
 
-. Create `broken3.yml`:
-+
+Here's what's in the file:
+
 [source,yaml]
 ----
 ---
@@ -136,10 +130,8 @@ NOTE: In the *VSCode Editor* tab
       ansible.builtin.debug:
         msg: "Port is {{ HTTP_PORT }}"
 ----
-+
-. Save the file
 
-. Switch to *Terminal* and run with verbose mode:
+. Switch to *Terminal* tab and run with verbose mode:
 +
 [source,bash,role=execute]
 ----
@@ -161,7 +153,6 @@ ansible-playbook -i inventory.yml broken3.yml -v
         msg: "Port is {{ http_port }}"
 ----
 +
-. Save the file
 
 . Switch to *Terminal* and verify:
 +
@@ -176,10 +167,10 @@ ansible-playbook --syntax-check -i inventory.yml broken3.yml
 .☑️ Task 4 - Fix missing or incorrect quotes
 [%collapsible]
 =====
-NOTE: In the *VSCode Editor* tab
+The file `broken4.yml` has a variable reference without quotes. Jinja2 variables must be quoted when they start a value.
 
-. Create `broken4.yml`:
-+
+Here's what's in the file:
+
 [source,yaml]
 ----
 ---
@@ -193,10 +184,8 @@ NOTE: In the *VSCode Editor* tab
         name: {{ package_name }}
         state: present
 ----
-+
-. Save the file
 
-. Switch to *Terminal* and check syntax:
+. Switch to *Terminal* tab and check syntax:
 +
 [source,bash,role=execute]
 ----
@@ -219,7 +208,6 @@ ansible-playbook --syntax-check -i inventory.yml broken4.yml
         state: present
 ----
 +
-. Save the file
 
 . Switch to *Terminal* and verify:
 +
@@ -234,10 +222,10 @@ ansible-playbook --syntax-check -i inventory.yml broken4.yml
 .☑️ Task 5 - Fix missing colons
 [%collapsible]
 =====
-NOTE: In the *VSCode Editor* tab
+The file `broken5.yml` is missing a colon after `tasks`. In YAML, all dictionary keys must have a colon.
 
-. Create `broken5.yml`:
-+
+Here's what's in the file:
+
 [source,yaml]
 ----
 ---
@@ -247,10 +235,8 @@ NOTE: In the *VSCode Editor* tab
     - name: Ping hosts
       ansible.builtin.ping:
 ----
-+
-. Save the file
 
-. Switch to *Terminal* and check syntax:
+. Switch to *Terminal* tab and check syntax:
 +
 [source,bash,role=execute]
 ----
@@ -269,7 +255,6 @@ yamllint broken5.yml
       ansible.builtin.ping:
 ----
 +
-. Save the file
 
 . Switch to *Terminal* and verify:
 +
@@ -294,14 +279,22 @@ In this module, you learned:
 
 In the next module, you'll learn how to use debugging tools and fix a broken playbook to get it running!
 
-== Embracing the Next Challenge
-
+======
+.✅ Next Challenge
+[%collapsible]
+=====
 Once you've completed the tasks above, proceed to the next module to learn about debugging tools and workflows.
 
 * Review the five common error types and how to fix them
 * Practice identifying errors from yamllint output
 * Take a moment to understand why each error type occurs
+=====
+======
 
-== Encountered an issue?
-
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======

@@ -150,7 +150,6 @@ NOTE: In the *VSCode Editor* tab
         msg: "Done"
 ----
 +
-. Save the file
 
 . Switch to *Terminal* and find the errors:
 +
@@ -179,7 +178,6 @@ yamllint debug-challenge.yml
         msg: "Done"
 ----
 +
-. Save the file
 
 . Switch to *Terminal* and verify it works:
 +
@@ -268,6 +266,10 @@ Now that you know YAML fundamentals, you can:
 
 Keep practicing, and remember: every YAML expert started where you are now!
 
-== Encountered an issue?
-
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======

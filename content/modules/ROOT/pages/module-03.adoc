@@ -58,7 +58,6 @@ NOTE: In the *VSCode Editor* tab
         enabled: true
 ----
 +
-. Save the file
 
 IMPORTANT: Variables starting a value must be quoted: `"{{ var }}"` not `{{ var }}`
 =====
@@ -125,7 +124,6 @@ NOTE: In the *VSCode Editor* tab
         enabled: true
 ----
 +
-. Save the file
 =====
 ======
 
@@ -197,7 +195,6 @@ NOTE: In the *VSCode Editor* tab
         enabled: true  # Start automatically on system boot
 ----
 +
-. Save the file
 =====
 ======
 
@@ -288,14 +285,22 @@ In this module, you learned:
 
 Your playbook is now flexible, well-documented, and follows Ansible best practices! In the next module, you'll learn how to debug common YAML errors and troubleshoot syntax issues.
 
-== Embracing the Next Challenge
-
+======
+.✅ Next Challenge
+[%collapsible]
+=====
 Once you've completed the tasks above, proceed to the next module to learn about common YAML errors.
 
 * Review your variable definitions and ensure they follow naming conventions
 * Make sure your comments document the "why" not the "what"
 * Take a moment to understand how loops work with list variables
+=====
+======
 
-== Encountered an issue?
-
+======
+.🐛 Encountered an issue?
+[%collapsible]
+=====
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
+=====
+======
