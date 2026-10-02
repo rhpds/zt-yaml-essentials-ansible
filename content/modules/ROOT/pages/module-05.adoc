@@ -227,38 +227,6 @@ If it runs successfully, congratulations! You've debugged a complex broken playb
 |Add `loop:` when using `{{ item }}`
 |===
 
-== Key Takeaways
-
-Congratulations on completing YAML Essentials for Ansible! Here's everything you've mastered:
-
-**YAML Fundamentals:**
-* ✅ YAML uses `.yml` extension and starts with `---`
-* ✅ YAML is case-sensitive - maintain consistent casing
-* ✅ Use 2 spaces for indentation (never tabs!)
-* ✅ Scalars, lists, and dictionaries are the building blocks
-* ✅ Nested structures require consistent indentation
-
-**Ansible Playbooks:**
-* ✅ Playbooks contain plays that target specific hosts
-* ✅ Tasks execute in order from top to bottom
-* ✅ Modules are the building blocks that perform actual work
-* ✅ Use `become: true` for privilege escalation
-* ✅ Use FQCN (Fully Qualified Collection Names)
-
-**Variables & Best Practices:**
-* ✅ Define variables in `vars:` section as key-value pairs
-* ✅ Reference variables with `"{{ variable_name }}"` syntax
-* ✅ Use `loop:` to iterate over list variables
-* ✅ Follow naming conventions: lowercase with underscores
-* ✅ Document why, not what, in comments
-
-**Debugging & Troubleshooting:**
-* ✅ Use `yamllint` to catch YAML syntax errors
-* ✅ Use `--syntax-check` for Ansible-specific validation
-* ✅ Follow a systematic troubleshooting workflow
-* ✅ Read error messages carefully - they point to the problem
-* ✅ **Debug complex playbooks with multiple errors** - you did it!
-
 == 🎉 Lab Complete!
 
 Congratulations! You've completed the YAML Essentials for Ansible lab AND debugged a complex broken playbook!
@@ -271,15 +239,6 @@ You now have the skills to:
 * ✅ Debug complex YAML errors systematically
 * ✅ Apply best practices for maintainable code
 * ✅ Troubleshoot real-world broken playbooks with confidence
-
-=== Your Final Lab Files
-
-You've created and debugged files in the `ansible-lab` folder:
-
-* `inventory.yml` - A structured inventory with groups and variables
-* `site.yml` - A documented playbook with variables and tasks
-* `broken1.yml` through `broken5.yml` - You fixed all 5 types of common errors
-* `debug-challenge.yml` - You debugged a complex playbook with MULTIPLE errors and got it running! 🎯
 
 === Next Steps
 

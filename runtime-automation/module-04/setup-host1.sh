@@ -16,13 +16,8 @@ EOF
 
 echo "Created broken1.yml with indentation errors" >> /tmp/progress.log
 
-# Create broken2.yml with tabs instead of spaces
-printf "---\n- name: Broken tabs example\n  hosts: webservers\n  tasks:\n\t- name: Task with tab\n\t  ansible.builtin.ping:\n" > /home/rhel/ansible-lab/broken2.yml
-
-echo "Created broken2.yml with tab characters" >> /tmp/progress.log
-
 # Create broken3.yml with case sensitivity error
-cat > /home/rhel/ansible-lab/broken3.yml << 'EOF'
+cat > /home/rhel/ansible-lab/broken2.yml << 'EOF'
 ---
 - name: Case sensitivity problem
   hosts: webservers
@@ -34,10 +29,10 @@ cat > /home/rhel/ansible-lab/broken3.yml << 'EOF'
         msg: "Port is {{ HTTP_PORT }}"
 EOF
 
-echo "Created broken3.yml with case sensitivity error" >> /tmp/progress.log
+echo "Created broken2.yml with case sensitivity error" >> /tmp/progress.log
 
 # Create broken4.yml with missing quotes
-cat > /home/rhel/ansible-lab/broken4.yml << 'EOF'
+cat > /home/rhel/ansible-lab/broken3.yml << 'EOF'
 ---
 - name: Quote problems
   hosts: webservers
@@ -50,10 +45,10 @@ cat > /home/rhel/ansible-lab/broken4.yml << 'EOF'
         state: present
 EOF
 
-echo "Created broken4.yml with missing quotes" >> /tmp/progress.log
+echo "Created broken3.yml with missing quotes" >> /tmp/progress.log
 
 # Create broken5.yml with missing colon
-cat > /home/rhel/ansible-lab/broken5.yml << 'EOF'
+cat > /home/rhel/ansible-lab/broken4.yml << 'EOF'
 ---
 - name: Missing colon
   hosts: webservers
@@ -62,5 +57,5 @@ cat > /home/rhel/ansible-lab/broken5.yml << 'EOF'
       ansible.builtin.ping:
 EOF
 
-echo "Created broken5.yml with missing colon" >> /tmp/progress.log
+echo "Created broken4.yml with missing colon" >> /tmp/progress.log
 echo "All broken files created for module-04" >> /tmp/progress.log

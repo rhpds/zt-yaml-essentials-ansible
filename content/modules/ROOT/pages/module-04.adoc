@@ -9,14 +9,13 @@ In this module, you will:
 
 * Identify and fix common YAML syntax errors
 * Understand indentation problems
-* Recognize tab vs. space issues
 * Debug case sensitivity mistakes
 * Fix quote-related errors
 * Catch missing colons
 
 [NOTE]
 ====
-For this module, we've pre-loaded five broken YAML files (`broken1.yml` through `broken5.yml`) in your `ansible-lab` folder. Each file contains a different type of common error for you to identify and fix.
+For this module, we've pre-loaded five broken YAML files (`broken1.yml` through `broken4.yml`) in your `ansible-lab` folder. Each file contains a different type of common error for you to identify and fix.
 ====
 
 == Hands-On Experience
@@ -64,54 +63,20 @@ yamllint broken1.yml
 =====
 ======
 
+
 ======
-.☑️ Task 2 - Detect tabs instead of spaces
+.☑️ Task 2 - Fix case sensitivity issues
 [%collapsible]
 =====
-The file `broken2.yml` contains tab characters instead of spaces. YAML requires spaces for indentation.
+The file `broken2.yml` has a case sensitivity error. A variable is defined with one case but referenced with different casing.
 
-. Switch to *Terminal* tab and validate it:
-+
-[source,bash,role=execute]
-----
-yamllint broken2.yml
-----
-
-. Switch to *VSCode Editor* and fix `broken2.yml` by replacing tabs with spaces. The corrected version should look like this:
-+
-[source,yaml]
-----
----
-- name: Fixed tabs example
-  hosts: webservers
-  tasks:
-    - name: Task with spaces only
-      ansible.builtin.ping:
-----
-+
-
-. Switch to *Terminal* and verify:
-+
-[source,bash,role=execute]
-----
-yamllint broken2.yml
-----
-=====
-======
-
-======
-.☑️ Task 3 - Fix case sensitivity issues
-[%collapsible]
-=====
-The file `broken3.yml` has a case sensitivity error. A variable is defined with one case but referenced with different casing.
-
-. Switch to *VSCode Editor* tab and open `broken3.yml` to inspect it
+. Switch to *VSCode Editor* tab and open `broken2.yml` to inspect it
 
 . Switch to *Terminal* tab and run with verbose mode:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook -i inventory.yml broken3.yml -v
+ansible-playbook -i inventory.yml broken2.yml -v
 ----
 
 . Switch to *VSCode Editor* and fix the variable name to use consistent casing. The corrected version should look like this:
@@ -134,24 +99,24 @@ ansible-playbook -i inventory.yml broken3.yml -v
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i inventory.yml broken3.yml
+ansible-playbook --syntax-check -i inventory.yml broken2.yml
 ----
 =====
 ======
 
 ======
-.☑️ Task 4 - Fix missing or incorrect quotes
+.☑️ Task 3 - Fix missing or incorrect quotes
 [%collapsible]
 =====
-The file `broken4.yml` has a variable reference without quotes. Remember: Jinja2 variables must be quoted when they start a value.
+The file `broken3.yml` has a variable reference without quotes. Remember: Jinja2 variables must be quoted when they start a value.
 
-. Switch to *VSCode Editor* tab and open `broken4.yml` to inspect it
+. Switch to *VSCode Editor* tab and open `broken3.yml` to inspect it
 
 . Switch to *Terminal* tab and check syntax:
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i inventory.yml broken4.yml
+ansible-playbook --syntax-check -i inventory.yml broken3.yml
 ----
 
 . Switch to *VSCode Editor* and add quotes around the variable. The corrected version should look like this:
@@ -175,24 +140,24 @@ ansible-playbook --syntax-check -i inventory.yml broken4.yml
 +
 [source,bash,role=execute]
 ----
-ansible-playbook --syntax-check -i inventory.yml broken4.yml
+ansible-playbook --syntax-check -i inventory.yml broken3.yml
 ----
 =====
 ======
 
 ======
-.☑️ Task 5 - Fix missing colons
+.☑️ Task 4 - Fix missing colons
 [%collapsible]
 =====
-The file `broken5.yml` is missing a colon somewhere. Remember: In YAML, all dictionary keys must have a colon.
+The file `broken4.yml` is missing a colon somewhere. Remember: In YAML, all dictionary keys must have a colon.
 
-. Switch to *VSCode Editor* tab and open `broken5.yml` to inspect it
+. Switch to *VSCode Editor* tab and open `broken4.yml` to inspect it
 
 . Switch to *Terminal* tab and check syntax:
 +
 [source,bash,role=execute]
 ----
-yamllint broken5.yml
+yamllint broken4.yml
 ----
 
 . Switch to *VSCode Editor* and add the missing colon. The corrected version should look like this:
@@ -212,7 +177,7 @@ yamllint broken5.yml
 +
 [source,bash,role=execute]
 ----
-yamllint broken5.yml
+yamllint broken4.yml
 ----
 =====
 ======

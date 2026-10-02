@@ -23,6 +23,15 @@ Variables provide several benefits:
 
 == Hands-On Experience
 
+
+=== Variable Naming Conventions
+
+Follow these best practices for variable names:
+
+* Use lowercase with underscores: `http_port`, `max_clients`
+* Make names descriptive: `web_package` not `pkg`
+* Avoid starting with numbers: `port_80` not `80_port`
+* Be consistent with casing throughout your playbook
 ======
 .☑️ Task 1 - Add variables to your playbook
 [%collapsible]
@@ -62,15 +71,6 @@ NOTE: In the *VSCode Editor* tab
 IMPORTANT: Variables starting a value must be quoted: `"{{ var }}"` not `{{ var }}`
 =====
 ======
-
-=== Variable Naming Conventions
-
-Follow these best practices for variable names:
-
-* Use lowercase with underscores: `http_port`, `max_clients`
-* Make names descriptive: `web_package` not `pkg`
-* Avoid starting with numbers: `port_80` not `80_port`
-* Be consistent with casing throughout your playbook
 
 ======
 .☑️ Task 2 - Verify variables work
@@ -153,13 +153,8 @@ NOTE: In the *VSCode Editor* tab
 [source,yaml]
 ----
 ---
-# site.yml - Web Server Configuration Playbook
-#
-# This playbook configures Apache web servers with SSL support
-# and firewall configuration for the TechStart Inc. infrastructure.
-#
+# This playbook configures Apache web servers and firewall config
 # Target: webservers group from inventory
-# Requirements: RHEL 9 with network connectivity
 
 - name: Configure web servers
   hosts: webservers
@@ -176,7 +171,7 @@ NOTE: In the *VSCode Editor* tab
     http_port: 80    # Standard HTTP port
 
   tasks:
-    # Connectivity test - ensures Ansible can reach all hosts
+    # Connectivity test
     - name: Ping all web servers
       ansible.builtin.ping:
 
@@ -195,6 +190,28 @@ NOTE: In the *VSCode Editor* tab
         enabled: true  # Start automatically on system boot
 ----
 +
+=====
+======
+
+======
+.☑️ Task 5 - Verify your work
+[%collapsible]
+=====
+NOTE: Switch to the *Terminal* tab
+
+. Syntax check:
++
+[source,bash,role=execute]
+----
+ansible-playbook --syntax-check -i inventory.yml site.yml
+----
+
+. Verify with yamllint:
++
+[source,bash,role=execute]
+----
+yamllint site.yml
+----
 =====
 ======
 
@@ -235,27 +252,6 @@ Here are the key best practices you've learned:
 . *Avoid unnecessary quotes* on simple strings
 . *Keep playbooks readable* with blank lines between sections
 
-======
-.☑️ Task 5 - Verify your work
-[%collapsible]
-=====
-NOTE: Switch to the *Terminal* tab
-
-. Syntax check:
-+
-[source,bash,role=execute]
-----
-ansible-playbook --syntax-check -i inventory.yml site.yml
-----
-
-. Verify with yamllint:
-+
-[source,bash,role=execute]
-----
-yamllint site.yml
-----
-=====
-======
 
 == More Boolean Examples
 
