@@ -14,32 +14,40 @@ In this module, you will:
 
 == Debugging Tools
 
-=== Tool 1: yamllint
+You've been using `yamllint` throughout this lab. Now let's explore its full capabilities and learn how to use it alongside other debugging tools.
 
-`yamllint` is a YAML validator that checks syntax and style.
+=== Tool 1: yamllint - Advanced Usage
 
-*Basic usage:*
+You've already used `yamllint` for basic syntax checking. Here are more advanced features:
+
+*Basic usage (you've done this):*
 [source,bash]
 ----
 yamllint inventory.yml
 yamllint site.yml
 ----
 
-*Show specific error types:*
+*Show specific error types with parsable format:*
 [source,bash]
 ----
 yamllint -f parsable site.yml
 ----
 
+*Check multiple files at once:*
+[source,bash]
+----
+yamllint *.yml
+----
+
 [TIP]
 ====
-*yamllint Error Categories:*
+*Understanding yamllint Error Categories:*
 
-* `syntax error` - Invalid YAML that won't parse
-* `indentation` - Wrong number of spaces
-* `trailing-spaces` - Spaces at end of lines
-* `line-length` - Lines too long (cosmetic)
-* `document-start` - Missing `---` (cosmetic)
+* `syntax error` - Invalid YAML that won't parse (MUST FIX)
+* `indentation` - Wrong number of spaces (MUST FIX)
+* `trailing-spaces` - Spaces at end of lines (cosmetic, safe to ignore)
+* `line-length` - Lines too long (cosmetic, safe to ignore)
+* `document-start` - Missing `---` (cosmetic, but best practice to include)
 ====
 
 === Tool 2: ansible-playbook --syntax-check

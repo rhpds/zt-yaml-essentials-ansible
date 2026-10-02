@@ -62,6 +62,8 @@ db1.example.com
 .☑️ Task 2 - Verify YAML syntax
 [%collapsible]
 =====
+Now let's verify your YAML is valid. We'll use `yamllint`, a tool that checks YAML files for syntax errors and style issues.
+
 NOTE: Switch to the *Terminal* tab
 
 . Open a new terminal (*Terminal > New Terminal*)
@@ -71,6 +73,8 @@ NOTE: Switch to the *Terminal* tab
 ----
 yamllint inventory.yml
 ----
++
+If your YAML is valid, you might see no output or just cosmetic warnings (like "missing document start"). Syntax errors will be clearly marked with line numbers.
 =====
 ======
 
