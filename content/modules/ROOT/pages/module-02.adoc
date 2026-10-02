@@ -221,17 +221,17 @@ If any task fails, Ansible stops executing on that host. This prevents partial c
 =====
 ======
 
+== Embracing The Next Challenge
+
 ======
 .✅ Next Challenge
 [%collapsible]
 =====
-You've just created a working Ansible playbook with multiple tasks! Before moving to the next module:
+Once you’ve completed the task, press the Next button at the bottom to proceed to the next challenge.
 
-* Review how the YAML structure creates a clear, readable automation workflow
-* Notice how each task builds on the previous one
-* See how the `{{ inventory_hostname }}` variable shows different values per server
+* The Next button will validate your steps and move you to the next challenge or chapter. If any steps are missing, an error will be produced, allowing you to recheck your steps before clicking the Next button again to continue.
 
-In the next module, you'll learn how to define and use your own variables to make playbooks even more flexible and reusable.
+* You also have the option to automatically solve a challenge or chapter by clicking the Solve button, which will complete the exercises for you.
 =====
 ======
 
@@ -242,3 +242,4 @@ In the next module, you'll learn how to define and use your own variables to mak
 If you have encountered an issue or have noticed something not quite right, please open an issue on the https://github.com/redhat-gpte-devopsautomation/zt-yaml-essentials-ansible/issues/new[YAML Essentials for Ansible repository^].
 =====
 ======
+

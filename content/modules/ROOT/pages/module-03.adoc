@@ -269,15 +269,17 @@ ignore_errors: true       # Continue even if task fails
 changed_when: false       # Never report as "changed"
 ----
 
+== Embracing The Next Challenge
+
 ======
 .✅ Next Challenge
 [%collapsible]
 =====
-Once you've completed the tasks above, proceed to the next module to learn about common YAML errors.
+Once you’ve completed the task, press the Next button at the bottom to proceed to the next challenge.
 
-* Review your variable definitions and ensure they follow naming conventions
-* Make sure your comments document the "why" not the "what"
-* Take a moment to understand how loops work with list variables
+* The Next button will validate your steps and move you to the next challenge or chapter. If any steps are missing, an error will be produced, allowing you to recheck your steps before clicking the Next button again to continue.
+
+* You also have the option to automatically solve a challenge or chapter by clicking the Solve button, which will complete the exercises for you.
 =====
 ======
 
