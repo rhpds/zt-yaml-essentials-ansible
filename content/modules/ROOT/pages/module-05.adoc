@@ -3,14 +3,14 @@
 
 == Introduction
 
-You've learned about common YAML errors - now it's time to master the debugging tools and workflows that will help you fix broken playbooks efficiently.
+You've learned about common YAML errors - now it's time to master the debugging tools and put all your knowledge to the test with a final challenge!
 
 In this module, you will:
 
-* Use debugging tools: `yamllint`, `--syntax-check`, and `--check`
+* Master debugging tools: `yamllint`, `--syntax-check`, and `--check`
 * Follow a systematic troubleshooting workflow
-* Fix a broken playbook and get it running
-* Understand common error messages and their solutions
+* **FINAL CHALLENGE:** Debug a complex broken playbook with multiple errors
+* Apply everything you've learned to get a broken playbook running
 
 == Debugging Tools
 
@@ -133,74 +133,69 @@ ansible-playbook --syntax-check -i inventory.yml site.yml
 =====
 ======
 
+== 🏆 Final Challenge: Debug the Broken Playbook
+
+You've learned about YAML syntax, playbook structure, variables, and common errors. Now it's time to prove you can debug a real-world broken playbook!
+
+In the previous modules, you fixed isolated errors one at a time. But real-world debugging isn't that clean - you often encounter multiple errors in the same file. This final challenge simulates that experience.
+
 ======
-.☑️ Task 2 - Final debugging challenge
+.☑️ Task 2 - Final Debugging Challenge
 [%collapsible]
 =====
-NOTE: In the *VSCode Editor* tab
+The file `debug-challenge.yml` is a broken playbook that contains **MULTIPLE** errors - all the types you've learned in this lab:
 
-. Create `debug-challenge.yml` with multiple errors:
-+
-[source,yaml]
-----
----
-- name: Debug Challenge
-  hosts: webservers
-  vars:
-    Package_Name: httpd
-  tasks:
-  - name: Install package
-    ansible.builtin.package:
-      name: {{ package_name }}
-      state: present
-    - name: Another task
-      ansible.builtin.debug:
-        msg: "Done"
-----
-+
+* Missing document start (`---`)
+* Indentation errors
+* Tab characters
+* Case sensitivity issues
+* Missing quotes
+* Missing colons
+* Structural problems
 
-. Switch to *Terminal* and find the errors:
+Your mission: Find and fix ALL the errors to get the playbook running successfully.
+
+. Switch to *VSCode Editor* tab and open `debug-challenge.yml` to inspect it
+
+. Switch to *Terminal* tab and start debugging with `yamllint`:
 +
 [source,bash,role=execute]
 ----
 yamllint debug-challenge.yml
 ----
-
-. Switch to *VSCode Editor* and fix all errors:
 +
-[source,yaml]
-----
----
-- name: Debug Challenge
-  hosts: webservers
-  vars:
-    package_name: httpd
-  tasks:
-    - name: Install package
-      ansible.builtin.package:
-        name: "{{ package_name }}"
-        state: present
+Fix the YAML syntax errors first.
 
-    - name: Another task
-      ansible.builtin.debug:
-        msg: "Done"
-----
-+
-
-. Switch to *Terminal* and verify it works:
+. Run Ansible syntax check:
 +
 [source,bash,role=execute]
 ----
-yamllint debug-challenge.yml
 ansible-playbook --syntax-check -i inventory.yml debug-challenge.yml
 ----
++
+This will catch additional Ansible-specific issues.
 
-. Run the playbook:
+. Keep iterating between VSCode and the Terminal, fixing errors until both tools report success
+
+. Once all errors are fixed, run the playbook for real:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook -i inventory.yml debug-challenge.yml
 ----
++
+If it runs successfully, congratulations! You've debugged a complex broken playbook! 🎉
+
+[TIP]
+====
+**Debugging Strategy:**
+
+1. Start with `yamllint` - fix basic YAML errors first
+2. Use `--syntax-check` - catch Ansible-specific issues
+3. Read error messages carefully - they tell you the line number
+4. Fix one error at a time and re-validate
+5. Count your spaces - indentation must be exact
+====
 =====
 ======
 
@@ -234,34 +229,36 @@ ansible-playbook -i inventory.yml debug-challenge.yml
 
 == Key Takeaways
 
-In this module, you learned:
+In this module, you:
 
-* ✅ Use `yamllint` to catch YAML syntax errors
-* ✅ Use `--syntax-check` for Ansible-specific validation
-* ✅ Follow the troubleshooting workflow systematically
-* ✅ Read error messages carefully - they point to the problem
-* ✅ Understand check mode limitations with service tasks
-* ✅ Fix broken playbooks using debugging tools
-* ✅ Run playbooks successfully after fixing errors
+* ✅ Mastered `yamllint` for YAML syntax validation
+* ✅ Used `--syntax-check` for Ansible-specific validation
+* ✅ Followed a systematic troubleshooting workflow
+* ✅ Debugged a complex playbook with multiple errors
+* ✅ Applied all your YAML knowledge to fix a real-world broken playbook
+* ✅ Got a broken playbook running successfully - the ultimate test!
 
-== Lab Complete!
+== 🎉 Lab Complete!
 
-Congratulations! You've completed the YAML Essentials for Ansible lab. You now have the skills to:
+Congratulations! You've completed the YAML Essentials for Ansible lab AND debugged a complex broken playbook!
+
+You now have the skills to:
 
 * ✅ Write valid YAML with proper syntax and structure
 * ✅ Create Ansible inventories and playbooks
 * ✅ Use variables to make playbooks flexible
-* ✅ Debug common YAML errors effectively
+* ✅ Debug complex YAML errors systematically
 * ✅ Apply best practices for maintainable code
+* ✅ Troubleshoot real-world broken playbooks with confidence
 
 === Your Final Lab Files
 
-You've created in the `ansible-lab` folder:
+You've created and debugged files in the `ansible-lab` folder:
 
 * `inventory.yml` - A structured inventory with groups and variables
 * `site.yml` - A documented playbook with variables and tasks
-* `broken*.yml` - Example files showing common errors
-* `debug-challenge.yml` - A practice debugging exercise (now fixed and working!)
+* `broken1.yml` through `broken5.yml` - You fixed all 5 types of common errors
+* `debug-challenge.yml` - You debugged a complex playbook with MULTIPLE errors and got it running! 🎯
 
 === Next Steps
 

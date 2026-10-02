@@ -1,5 +1,5 @@
 :sectnums:
-= Common YAML Errors
+= 4. Common YAML Errors
 
 == Introduction
 
@@ -27,20 +27,7 @@ For this module, we've pre-loaded five broken YAML files (`broken1.yml` through 
 =====
 The file `broken1.yml` has intentional indentation errors. Let's find and fix them.
 
-Here's what's in the file:
-
-[source,yaml]
-----
----
-- name: Broken indentation example
-  hosts: webservers
-  tasks:
-  - name: This task is not properly indented
-    ansible.builtin.ping:
-   - name: This task has wrong indentation
-     ansible.builtin.debug:
-       msg: "Wrong indent"
-----
+. Switch to *VSCode Editor* tab and open `broken1.yml` to see what's wrong
 
 . Switch to *Terminal* tab and check the syntax:
 +
@@ -48,8 +35,10 @@ Here's what's in the file:
 ----
 yamllint broken1.yml
 ----
++
+Notice the indentation errors in the output.
 
-. Switch to *VSCode Editor* and fix with correct indentation:
+. Switch to *VSCode Editor* and fix the indentation. The corrected version should look like this:
 +
 [source,yaml]
 ----
@@ -88,7 +77,7 @@ The file `broken2.yml` contains tab characters instead of spaces. YAML requires 
 yamllint broken2.yml
 ----
 
-. Switch to *VSCode Editor* and fix `broken2.yml`:
+. Switch to *VSCode Editor* and fix `broken2.yml` by replacing tabs with spaces. The corrected version should look like this:
 +
 [source,yaml]
 ----
@@ -114,22 +103,9 @@ yamllint broken2.yml
 .☑️ Task 3 - Fix case sensitivity issues
 [%collapsible]
 =====
-The file `broken3.yml` has a case sensitivity error. The variable is defined as `http_port` but referenced as `HTTP_PORT`.
+The file `broken3.yml` has a case sensitivity error. A variable is defined with one case but referenced with different casing.
 
-Here's what's in the file:
-
-[source,yaml]
-----
----
-- name: Case sensitivity problem
-  hosts: webservers
-  vars:
-    http_port: 80
-  tasks:
-    - name: Use the port variable
-      ansible.builtin.debug:
-        msg: "Port is {{ HTTP_PORT }}"
-----
+. Switch to *VSCode Editor* tab and open `broken3.yml` to inspect it
 
 . Switch to *Terminal* tab and run with verbose mode:
 +
@@ -138,7 +114,7 @@ Here's what's in the file:
 ansible-playbook -i inventory.yml broken3.yml -v
 ----
 
-. Switch to *VSCode Editor* and fix with consistent casing:
+. Switch to *VSCode Editor* and fix the variable name to use consistent casing. The corrected version should look like this:
 +
 [source,yaml]
 ----
@@ -167,23 +143,9 @@ ansible-playbook --syntax-check -i inventory.yml broken3.yml
 .☑️ Task 4 - Fix missing or incorrect quotes
 [%collapsible]
 =====
-The file `broken4.yml` has a variable reference without quotes. Jinja2 variables must be quoted when they start a value.
+The file `broken4.yml` has a variable reference without quotes. Remember: Jinja2 variables must be quoted when they start a value.
 
-Here's what's in the file:
-
-[source,yaml]
-----
----
-- name: Quote problems
-  hosts: webservers
-  vars:
-    package_name: httpd
-  tasks:
-    - name: Install package without quotes
-      ansible.builtin.package:
-        name: {{ package_name }}
-        state: present
-----
+. Switch to *VSCode Editor* tab and open `broken4.yml` to inspect it
 
 . Switch to *Terminal* tab and check syntax:
 +
@@ -192,7 +154,7 @@ Here's what's in the file:
 ansible-playbook --syntax-check -i inventory.yml broken4.yml
 ----
 
-. Switch to *VSCode Editor* and fix with proper quotes:
+. Switch to *VSCode Editor* and add quotes around the variable. The corrected version should look like this:
 +
 [source,yaml]
 ----
@@ -222,19 +184,9 @@ ansible-playbook --syntax-check -i inventory.yml broken4.yml
 .☑️ Task 5 - Fix missing colons
 [%collapsible]
 =====
-The file `broken5.yml` is missing a colon after `tasks`. In YAML, all dictionary keys must have a colon.
+The file `broken5.yml` is missing a colon somewhere. Remember: In YAML, all dictionary keys must have a colon.
 
-Here's what's in the file:
-
-[source,yaml]
-----
----
-- name: Missing colon
-  hosts: webservers
-  tasks
-    - name: Ping hosts
-      ansible.builtin.ping:
-----
+. Switch to *VSCode Editor* tab and open `broken5.yml` to inspect it
 
 . Switch to *Terminal* tab and check syntax:
 +
@@ -243,7 +195,7 @@ Here's what's in the file:
 yamllint broken5.yml
 ----
 
-. Switch to *VSCode Editor* and fix by adding the colon:
+. Switch to *VSCode Editor* and add the missing colon. The corrected version should look like this:
 +
 [source,yaml]
 ----

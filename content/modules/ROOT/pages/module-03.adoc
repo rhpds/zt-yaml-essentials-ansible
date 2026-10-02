@@ -1,5 +1,5 @@
 :sectnums:
-= Variables & Best Practices
+= 3. Variables & Best Practices
 
 == Introduction
 

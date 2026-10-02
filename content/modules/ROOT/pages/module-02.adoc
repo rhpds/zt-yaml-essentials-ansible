@@ -1,5 +1,5 @@
 :sectnums:
-= Your First Playbook
+= 2. Your First Playbook
 
 == Introduction
 
