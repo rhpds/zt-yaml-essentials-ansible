@@ -1,0 +1,83 @@
+---
+- name: Create inventory
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Add bastion host
+    ansible.builtin.add_host:
+      name: "{{ lookup('ansible.builtin.env', 'BASTION_HOST') }}"
+      ansible_ssh_host: "{{ lookup('ansible.builtin.env', 'BASTION_HOST') }}"
+      ansible_ssh_port: "{{ lookup('ansible.builtin.env', 'BASTION_PORT') }}"
+      ansible_ssh_user: "{{ lookup('ansible.builtin.env', 'BASTION_USER') }}"
+      ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'BASTION_PASSWORD') }}"
+
+- name: Runtime automation playbook for YAML Essentials
+  hosts: all:!localhost
+  gather_facts: false
+  become: false
+
+  tasks:
+  - name: Simple debug task
+    ansible.builtin.debug:
+      msg: "Running runtime automation"
+
+  - name: Set config_host variable with ansible_host value
+    set_fact:
+      config_host: "{{ ansible_host }}"
+
+  - name: Create runtime scripts directory
+    ansible.builtin.file:
+      path: "/tmp/runtime-scripts/{{ module_dir }}"
+      state: directory
+      owner: rhel
+      group: rhel
+      mode: '0755'
+
+  - name: Check if script exists
+    ansible.builtin.stat:
+      path: "./{{ module_dir }}/{{ module_stage }}-{{ config_host }}.sh"
+    delegate_to: localhost
+    register: r_script_test
+
+  - name: Copy script file
+    when: r_script_test.stat.exists
+    copy:
+      src: "./{{ module_dir }}/{{ module_stage }}-{{ ansible_host }}.sh"
+      dest: "/tmp/runtime-scripts/{{ module_dir }}/{{ module_stage }}-{{ ansible_host }}.sh"
+    register: r_result
+
+  - name: Execute module stage as the learner
+    when: r_script_test.stat.exists
+    shell: |
+      bash -x /tmp/runtime-scripts/{{ module_dir }}/{{ module_stage }}-{{ ansible_host }}.sh > /tmp/runtime-scripts/{{ module_dir }}/{{ module_stage }}-{{ ansible_host }}.log 2>&1
+      r_script_rc=$?
+      cat /tmp/runtime-scripts/{{ module_dir }}/{{ module_stage }}-{{ ansible_host }}.log
+      exit "$r_script_rc"
+    become: true
+    become_user: rhel
+    environment:
+      HOME: /home/rhel
+      XDG_RUNTIME_DIR: /run/user/1000
+    register: r_result
+
+  - name: Output script result
+    ansible.builtin.debug:
+      msg: "{{ r_result.stdout | default('') }}"
+    when: r_script_test.stat.exists
+
+  - name: Write script result to file
+    ansible.builtin.copy:
+      content: "{{ r_result.stdout | default('') }}"
+      dest: "{{ job_info_dir }}/script.out"
+    delegate_to: localhost
+    when: r_script_test.stat.exists and job_info_dir is defined
+
+  - name: Output script result details
+    ansible.builtin.debug:
+      var: r_result
+    when: r_script_test.stat.exists and job_info_dir is defined
+
+  - name: Fail if stage was failed
+    ansible.builtin.fail:
+      msg: "Stage failed"
+    when: r_script_test.stat.exists and r_result.rc != 0
