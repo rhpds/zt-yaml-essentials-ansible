@@ -29,9 +29,7 @@ Variables provide several benefits:
 =====
 NOTE: In the *VSCode Editor* tab
 
-In Ansible playbooks, you define variables in the `vars:` section, which is a dictionary of key-value pairs. Let's refactor the playbook from Module 2 to use variables.
-
-. Update `site.yml` in VSCode to include a vars section. Replace all the content with:
+. Update `site.yml` with variables:
 +
 [source,yaml]
 ----
@@ -60,15 +58,9 @@ In Ansible playbooks, you define variables in the `vars:` section, which is a di
         enabled: true
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Notice the changes:
-+
-* `vars:` section defines three variables
-* Variables use `{{ variable_name }}` syntax (Jinja2 template syntax)
-* Task names are more generic since the actual package name is in the variable
-
-IMPORTANT: *Variable Syntax - Jinja2 Templates:* When using variables in YAML values, you must use quotes around the entire value if it starts with a variable: `name: "{{ web_package }}"` is correct, but `name: {{ web_package }}` will cause a YAML parser error! The quotes tell the YAML parser this is a string, then Ansible evaluates the Jinja2 template inside.
+IMPORTANT: Variables starting a value must be quoted: `"{{ var }}"` not `{{ var }}`
 =====
 ======
 
@@ -87,14 +79,10 @@ Follow these best practices for variable names:
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Check the playbook syntax:
-+
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
-+
-The syntax check confirms your variables are properly formatted.
 =====
 ======
 
@@ -104,9 +92,7 @@ The syntax check confirms your variables are properly formatted.
 =====
 NOTE: In the *VSCode Editor* tab
 
-Variables can also be lists, which is useful when you need to install multiple packages or perform similar actions on multiple items.
-
-. Update `site.yml` in VSCode to install multiple packages. Replace all the content with:
+. Update `site.yml` to use a list variable with loop:
 +
 [source,yaml]
 ----
@@ -139,11 +125,7 @@ Variables can also be lists, which is useful when you need to install multiple p
         enabled: true
 ----
 +
-IMPORTANT: Save the file.
-
-. The `web_packages` variable is now a list (using `-` for each item), and we use `loop:` to iterate over it.
-
-NOTE: *The `loop` Keyword:* The `loop:` keyword tells Ansible to repeat the task for each item in the list. The special variable `{{ item }}` represents the current item in each iteration. This installs each package in the list one by one.
+. Save the file
 =====
 ======
 
@@ -163,14 +145,12 @@ vars:
 ----
 
 ======
-.☑️ Task 4 - Add effective comments
+.☑️ Task 4 - Add comments
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
 
-Let's add documentation comments to the playbook.
-
-. Add meaningful comments to `site.yml` in VSCode. Replace all the content with:
+. Add comments to `site.yml`:
 +
 [source,yaml]
 ----
@@ -217,9 +197,7 @@ Let's add documentation comments to the playbook.
         enabled: true  # Start automatically on system boot
 ----
 +
-IMPORTANT: Save the file.
-
-TIP: *When to Add Comments:* Document the *purpose* of the playbook at the top. Explain *why* configuration choices were made. Clarify *complex* logic or non-obvious behavior. Mark sections as *TODO* for future work. Document *requirements* or *prerequisites*. Don't comment the obvious - for example, `# Installs httpd` is redundant when your task name already says "Install httpd"!
+. Save the file
 =====
 ======
 
@@ -266,8 +244,6 @@ Here are the key best practices you've learned:
 =====
 NOTE: Switch to the *Terminal* tab
 
-Let's ensure your documented playbook still works correctly.
-
 . Syntax check:
 +
 [source,bash,role=execute]
@@ -275,25 +251,11 @@ Let's ensure your documented playbook still works correctly.
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
-. Verify yamllint is happy:
+. Verify with yamllint:
 +
 [source,bash,role=execute]
 ----
 yamllint site.yml
-----
-
-. Check that variables are defined:
-+
-[source,bash,role=execute]
-----
-grep -E "^  vars:" site.yml && echo "✅ vars section found"
-----
-
-. Count your comments:
-+
-[source,bash,role=execute]
-----
-grep -c "^#\|  #" site.yml
 ----
 =====
 ======

@@ -53,10 +53,8 @@ Let's create a simple playbook that tests connectivity to your hosts and then in
 =====
 NOTE: In the *VSCode Editor* tab
 
-. In the left sidebar, hover over the `ansible-lab` folder name
-. Click the *New File* icon (page with a plus sign)
-. Type `site.yml` as the filename and press Enter
-. In the editor, add the following content:
+. Create a new file called `site.yml`
+. Add the following content:
 +
 [source,yaml]
 ----
@@ -68,18 +66,7 @@ NOTE: In the *VSCode Editor* tab
       ansible.builtin.ping:
 ----
 +
-IMPORTANT: Save the file after adding the content.
-
-. Notice the key elements:
-+
-* `---` starts the YAML document
-* `- name:` defines the play (note the leading hyphen - this is a list!)
-* `hosts: webservers` targets the webservers group from your inventory
-* `tasks:` begins the task list
-* `- name: Ping all web servers` describes the task
-* `ansible.builtin.ping:` is the module to execute
-
-NOTE: *What is `ansible.builtin.ping`?* The `ansible.builtin.ping` module tests connectivity to hosts. It's not an ICMP ping - it verifies Ansible can execute tasks on the target. Since your inventory uses `ansible_connection: local`, this will test local execution instead of SSH.
+. Save the file
 =====
 ======
 
@@ -89,28 +76,19 @@ NOTE: *What is `ansible.builtin.ping`?* The `ansible.builtin.ping` module tests 
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Validate the YAML syntax:
+. Validate the syntax:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
-+
-If successful, you'll see: `playbook: site.yml`
 
-. Run the playbook to execute the tasks:
+. Run the playbook:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook -i inventory.yml site.yml
 ----
-+
-You should see:
-+
-* `TASK [Gathering Facts]` - Collects system information
-* `TASK [Ping all web servers]` - Tests connectivity (green = success)
-
-TIP: The playbook output uses colors: *Green* = Success (no changes made), *Yellow* = Success (changes made), *Red* = Failed
 =====
 ======
 
@@ -135,7 +113,7 @@ ansible.builtin.package:
 =====
 NOTE: In the *VSCode Editor* tab
 
-. Open your `site.yml` file and replace all the content with:
+. Replace `site.yml` with:
 +
 [source,yaml]
 ----
@@ -159,22 +137,12 @@ NOTE: In the *VSCode Editor* tab
         enabled: true
 ----
 +
-IMPORTANT: If you copy and paste this into the playbook, ensure the indentation is correct and save the file.
-
-. Notice the new elements:
-+
-* `become: true` - Execute tasks with elevated privileges (sudo)
-* Multiple tasks in the `tasks:` list (each starts with `-`)
-* Module parameters indented under the module name
-* `state: present` tells the package module to install if not present
-* `state: started` tells the service module to start the service
-
-WARNING: *Common Mistake - Indentation Errors:* The module parameters (like `name:` and `state:`) must be indented under the module name. For example, `name: httpd` must be indented under `ansible.builtin.package:`, not at the same level.
+. Save the file
 =====
 ======
 
 ======
-.☑️ Task 4 - Verify syntax and run the updated playbook
+.☑️ Task 4 - Verify and run the updated playbook
 [%collapsible]
 =====
 NOTE: Switch to the *Terminal* tab
@@ -186,19 +154,12 @@ NOTE: Switch to the *Terminal* tab
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 
-. Run the updated playbook:
+. Run the playbook:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook -i inventory.yml site.yml
 ----
-+
-You should now see all three tasks execute:
-+
-* `TASK [Gathering Facts]` - Collects system information
-* `TASK [Ping all web servers]` - Tests connectivity (green = success)
-* `TASK [Install Apache web server]` - Installs httpd (yellow = changed)
-* `TASK [Start and enable Apache]` - Starts the service (yellow = changed)
 =====
 ======
 
@@ -266,41 +227,12 @@ ansible-doc ansible.builtin.package
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Verify your YAML syntax is valid:
-+
-[source,bash,role=execute]
-----
-ansible-playbook --syntax-check -i inventory.yml site.yml
-----
-+
-Should output: `playbook: site.yml`
-
-. Count the number of tasks in your playbook:
-+
-[source,bash,role=execute]
-----
-grep -c "^    - name:" site.yml
-----
-+
-You should see `3` (three tasks).
-
-. Verify your inventory structure:
-+
-[source,bash,role=execute]
-----
-ansible-inventory -i inventory.yml --list
-----
-+
-This shows how Ansible interprets your inventory, including all groups and variables.
-
-. Check that Apache is running on localhost:
+. Check that Apache is running:
 +
 [source,bash,role=execute]
 ----
 curl http://localhost
 ----
-+
-You should see the default Apache test page HTML.
 =====
 ======
 

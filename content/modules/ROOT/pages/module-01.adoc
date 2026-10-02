@@ -25,27 +25,14 @@ YAML offers several advantages for automation:
 
 == YAML File Basics
 
-Before we dive into YAML syntax, understand these fundamental rules:
-
 [IMPORTANT]
 ====
 *Critical YAML Rules:*
 
-* YAML files typically use the `.yml` or `.yaml` extension
-* YAML is *case-sensitive* - `Name` and `name` are different
+* Use `.yml` or `.yaml` extension
+* YAML is *case-sensitive*
 * Use *2 spaces* for indentation (never tabs!)
-* Files often start with `---` to indicate the beginning of a YAML document
-====
-
-[TIP]
-====
-*Using the Web-Based VSCode Editor:*
-
-* Click the *VSCode Editor* tab to open the editor interface
-* The `ansible-lab` folder is already created and loaded for you
-* The left sidebar shows your files and folders
-* To create a file: hover over the folder name and click the *New File* icon (page with +)
-* Save files with *File > Save* or `Ctrl+S`
+* Start files with `---`
 ====
 
 == Hands-On Experience
@@ -56,18 +43,9 @@ Before we dive into YAML syntax, understand these fundamental rules:
 =====
 NOTE: In the *VSCode Editor* tab
 
-. Click the *VSCode Editor* tab at the top of your lab interface to open the web-based editor
-+
-You should see VSCode open with the `ansible-lab` folder already loaded.
-
-. Create your first YAML file:
-+
-* Look at the left sidebar - you'll see the file explorer showing the `ansible-lab` folder
-* Hover your mouse over the `ansible-lab` folder name
-* Click the *New File* icon (it looks like a page with a plus sign)
-* Type `inventory.yml` as the filename and press Enter
-+
-A new empty file will open in the editor.
+. Open the VSCode Editor tab
+. Hover over the `ansible-lab` folder and click the *New File* icon
+. Name it `inventory.yml` and press Enter
 =====
 ======
 
@@ -77,9 +55,7 @@ A new empty file will open in the editor.
 =====
 NOTE: In the *VSCode Editor* tab
 
-YAML has three fundamental data types: scalars, lists, and dictionaries. Let's start with scalars - basic, single-value data types like strings, numbers, and booleans.
-
-. In the left sidebar, click on `inventory.yml` to open it (if it's not already open), then add the following content:
+. Open `inventory.yml` and add the following:
 +
 [source,yaml]
 ----
@@ -89,11 +65,7 @@ web2.example.com
 db1.example.com
 ----
 +
-IMPORTANT: Save the file by clicking *File > Save* in the top menu, or press `Ctrl+S` (Windows/Linux) or `Cmd+S` (Mac).
-
-. You should see three hostnames listed in your file. Each hostname is a *scalar* - a simple string value.
-
-TIP: *Strings in YAML:* Quotation marks are optional for most strings in YAML. As a best practice for Ansible, avoid using quotation marks unless necessary (e.g., when a string contains special characters).
+. Save the file (`Ctrl+S` or `Cmd+S`)
 =====
 ======
 
@@ -103,18 +75,13 @@ TIP: *Strings in YAML:* Quotation marks are optional for most strings in YAML. A
 =====
 NOTE: Switch to the *Terminal* tab
 
-. In VSCode, click the *Terminal* menu at the top, then select *New Terminal*
-+
-A terminal panel will open at the bottom of the screen.
-
-. In the terminal, run the following command:
+. Open a new terminal (*Terminal > New Terminal*)
+. Verify the syntax:
 +
 [source,bash,role=execute]
 ----
 yamllint inventory.yml
 ----
-+
-If the syntax is valid, you'll see no errors.
 =====
 ======
 
@@ -124,9 +91,7 @@ If the syntax is valid, you'll see no errors.
 =====
 NOTE: In the *VSCode Editor* tab
 
-Lists define collections of items and are identified by leading hyphens (`-`). Ansible uses lists to specify multiple items under a key.
-
-. Update `inventory.yml` in VSCode with list syntax. Replace all the content with:
+. Update `inventory.yml` with list syntax:
 +
 [source,yaml]
 ----
@@ -137,9 +102,7 @@ hosts:
   - db1.example.com
 ----
 +
-IMPORTANT: Save the file.
-
-. Notice how each hostname now starts with a hyphen (`-`) and is indented with 2 spaces under the `hosts:` key.
+. Save the file
 =====
 ======
 
@@ -149,8 +112,6 @@ IMPORTANT: Save the file.
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Verify the syntax:
-+
 [source,bash,role=execute]
 ----
 yamllint inventory.yml
@@ -164,9 +125,7 @@ yamllint inventory.yml
 =====
 NOTE: In the *VSCode Editor* tab
 
-Dictionaries associate keys with values. They're used throughout Ansible for configurations, variables, and module parameters.
-
-. Update `inventory.yml` in VSCode to use dictionaries and nested structures. Replace all the content with:
+. Update `inventory.yml` with nested dictionaries:
 +
 [source,yaml]
 ----
@@ -184,19 +143,12 @@ all:
         db1.example.com:
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. This inventory now has:
-+
-* `all:` - A top-level dictionary key
-* `vars:` - Variables that apply to all hosts
-* `children:` - A nested dictionary defining groups
-* `webservers:` and `databases:` - Group names (dictionary keys)
-* `hosts:` - Another nested dictionary containing host lists
-
-NOTE: *Understanding Group Variables:* The `vars:` section under `all:` applies the `ansible_connection: local` setting to all hosts in the inventory. This tells Ansible to run commands on the local machine rather than connecting via SSH.
-
-NOTE: *Understanding Indentation:* Notice the structure uses 2 spaces per level: `all:` is at 0 spaces (top level), `vars:` is at 2 spaces (nested under `all`), `children:` is at 2 spaces (nested under `all`), `webservers:` is at 4 spaces (nested under `children`), and `hosts:` is at 6 spaces (nested under `webservers`). Consistent indentation is critical in YAML!
+[NOTE]
+====
+The `vars:` section applies `ansible_connection: local` to all hosts, running commands locally instead of via SSH.
+====
 =====
 ======
 
@@ -206,14 +158,10 @@ NOTE: *Understanding Indentation:* Notice the structure uses 2 spaces per level:
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Verify with Ansible:
-+
 [source,bash,role=execute]
 ----
 ansible-inventory -i inventory.yml --list
 ----
-+
-This command shows how Ansible interprets your YAML inventory structure.
 =====
 ======
 
@@ -223,9 +171,7 @@ This command shows how Ansible interprets your YAML inventory structure.
 =====
 NOTE: In the *VSCode Editor* tab
 
-YAML is case-sensitive, which means `HTTP_PORT` and `http_port` are completely different keys. Let's add some host variables to demonstrate.
-
-. Update `inventory.yml` with the following content:
+. Add host-specific variables:
 +
 [source,yaml]
 ----
@@ -248,9 +194,9 @@ all:
           db_port: 5432
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-WARNING: *Common Mistake - Inconsistent Casing:* If you use `http_port` in one place and `HTTP_PORT` in another, Ansible will treat them as different variables. This is a common source of errors!
+WARNING: YAML is case-sensitive! `http_port` and `HTTP_PORT` are different variables.
 =====
 ======
 
@@ -260,16 +206,14 @@ WARNING: *Common Mistake - Inconsistent Casing:* If you use `http_port` in one p
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Verify the inventory structure:
+. Verify the structure:
 +
 [source,bash,role=execute]
 ----
 ansible-inventory -i inventory.yml --list --yaml
 ----
-+
-Notice how each host now has variables associated with it. The variable names use consistent casing throughout.
 
-. Test that Ansible can read all hosts in the webservers group:
+. Test the webservers group:
 +
 [source,bash,role=execute]
 ----

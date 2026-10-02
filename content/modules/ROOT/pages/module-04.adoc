@@ -22,12 +22,7 @@ In this module, you will:
 =====
 NOTE: In the *VSCode Editor* tab
 
-Indentation errors are the #1 cause of YAML failures. Remember: YAML requires *exactly 2 spaces* per level.
-
-. In the left sidebar, hover over the `ansible-lab` folder
-. Click the *New File* icon (page with a plus sign)
-. Type `broken1.yml` as the filename and press Enter
-. In the editor, add the following content with intentional indentation errors:
+. Create `broken1.yml` with intentional indentation errors:
 +
 [source,yaml]
 ----
@@ -42,18 +37,16 @@ Indentation errors are the #1 cause of YAML failures. Remember: YAML requires *e
        msg: "Wrong indent"
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and try to check the syntax:
+. Switch to *Terminal* and check the syntax:
 +
 [source,bash,role=execute]
 ----
 yamllint broken1.yml
 ----
-+
-You'll see errors about indentation!
 
-. Now fix the file with correct indentation in VSCode. Replace all the content with:
+. Switch to *VSCode Editor* and fix with correct indentation:
 +
 [source,yaml]
 ----
@@ -69,16 +62,14 @@ You'll see errors about indentation!
         msg: "Correct indent"
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and verify the fix:
+. Switch to *Terminal* and verify:
 +
 [source,bash,role=execute]
 ----
 yamllint broken1.yml
 ----
-
-WARNING: *Indentation Rules:* Use exactly 2 spaces per indentation level. Never mix spaces and tabs. Every child element must be indented from its parent. All items at the same level must have the same indentation.
 =====
 ======
 
@@ -88,34 +79,21 @@ WARNING: *Indentation Rules:* Use exactly 2 spaces per indentation level. Never 
 =====
 NOTE: Switch to the *Terminal* tab
 
-YAML does not allow tab characters. Many editors insert tabs when you press the Tab key, causing hard-to-see errors.
-
-. Create a file with tab characters using the terminal:
+. Create a file with tab characters:
 +
 [source,bash,role=execute]
 ----
 printf "---\n- name: Broken tabs example\n  hosts: webservers\n  tasks:\n\t- name: Task with tab\n\t  ansible.builtin.ping:\n" > broken2.yml
 ----
 
-. Try to validate it:
+. Validate it:
 +
 [source,bash,role=execute]
 ----
 yamllint broken2.yml
 ----
-+
-You'll see: `found character '\t' that cannot start any token`
 
-. Check for tabs in the file:
-+
-[source,bash,role=execute]
-----
-cat -A broken2.yml | grep "^I"
-----
-+
-The `^I` shows where tab characters are.
-
-. Switch to the *VSCode Editor* tab and fix the file. Open `broken2.yml` and replace all the content with:
+. Switch to *VSCode Editor* and fix `broken2.yml`:
 +
 [source,yaml]
 ----
@@ -127,16 +105,14 @@ The `^I` shows where tab characters are.
       ansible.builtin.ping:
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and verify the fix:
+. Switch to *Terminal* and verify:
 +
 [source,bash,role=execute]
 ----
 yamllint broken2.yml
 ----
-
-TIP: *Configure Your Editor:* Set your text editor to convert tabs to spaces, set tab width to 2 spaces, show whitespace characters (helps spot tabs), and auto-indent with spaces. Most modern editors (VS Code, vim, nano) can do this.
 =====
 ======
 
@@ -146,13 +122,7 @@ TIP: *Configure Your Editor:* Set your text editor to convert tabs to spaces, se
 =====
 NOTE: In the *VSCode Editor* tab
 
-Variable names and keys are case-sensitive in YAML. `HTTP_PORT` and `http_port` are different variables.
-
-. Create a new file called `broken3.yml`:
-+
-* Click the *New File* icon in the left sidebar
-* Name it `broken3.yml`
-* Add the following content:
+. Create `broken3.yml`:
 +
 [source,yaml]
 ----
@@ -167,27 +137,16 @@ Variable names and keys are case-sensitive in YAML. `HTTP_PORT` and `http_port` 
         msg: "Port is {{ HTTP_PORT }}"
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and check for undefined variables:
-+
-[source,bash,role=execute]
-----
-ansible-playbook --syntax-check -i inventory.yml broken3.yml
-----
-+
-The syntax check passes, but the variable won't be found at runtime!
-
-. Run it with verbose mode to see the variable error:
+. Switch to *Terminal* and run with verbose mode:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook -i inventory.yml broken3.yml -v
 ----
-+
-You'll see the undefined variable `HTTP_PORT` in the output.
 
-. Switch to the *VSCode Editor* tab and fix the file with consistent casing. Replace all the content with:
+. Switch to *VSCode Editor* and fix with consistent casing:
 +
 [source,yaml]
 ----
@@ -202,16 +161,14 @@ You'll see the undefined variable `HTTP_PORT` in the output.
         msg: "Port is {{ http_port }}"
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and verify it works:
+. Switch to *Terminal* and verify:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml broken3.yml
 ----
-
-IMPORTANT: *Case Sensitivity Checklist:* Variable names must match exactly - `http_port` defined, `http_port` used (not `HTTP_PORT`). Module names are always lowercase: `ansible.builtin.ping`. Dictionary keys must match exactly between definition and use.
 =====
 ======
 
@@ -221,13 +178,7 @@ IMPORTANT: *Case Sensitivity Checklist:* Variable names must match exactly - `ht
 =====
 NOTE: In the *VSCode Editor* tab
 
-Variables in YAML values must be quoted if they start the value, but quoting rules can be tricky.
-
-. Create a new file called `broken4.yml`:
-+
-* Click the *New File* icon in the left sidebar
-* Name it `broken4.yml`
-* Add the following content:
+. Create `broken4.yml`:
 +
 [source,yaml]
 ----
@@ -243,18 +194,16 @@ Variables in YAML values must be quoted if they start the value, but quoting rul
         state: present
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and try to check syntax:
+. Switch to *Terminal* and check syntax:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml broken4.yml
 ----
-+
-You'll see: `found undefined alias` or similar error.
 
-. Switch to the *VSCode Editor* tab and fix the file with proper quotes. Replace all the content with:
+. Switch to *VSCode Editor* and fix with proper quotes:
 +
 [source,yaml]
 ----
@@ -270,16 +219,14 @@ You'll see: `found undefined alias` or similar error.
         state: present
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and verify the fix:
+. Switch to *Terminal* and verify:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml broken4.yml
 ----
-
-NOTE: *Quoting Rules for Variables:* Variables at the START of a value need quotes: `name: "{{ package_name }}"` is correct. Variables NOT at the start don't need quotes (but can have them): `msg: "Installing {{ package_name }}"` is correct. NEVER without quotes when at start: `name: {{ package_name }}` will cause an error!
 =====
 ======
 
@@ -289,13 +236,7 @@ NOTE: *Quoting Rules for Variables:* Variables at the START of a value need quot
 =====
 NOTE: In the *VSCode Editor* tab
 
-YAML dictionaries require a colon (`:`) after each key. Forgetting the colon is a common typo.
-
-. Create a new file called `broken5.yml`:
-+
-* Click the *New File* icon in the left sidebar
-* Name it `broken5.yml`
-* Add the following content:
+. Create `broken5.yml`:
 +
 [source,yaml]
 ----
@@ -307,18 +248,16 @@ YAML dictionaries require a colon (`:`) after each key. Forgetting the colon is 
       ansible.builtin.ping:
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and check syntax:
+. Switch to *Terminal* and check syntax:
 +
 [source,bash,role=execute]
 ----
 yamllint broken5.yml
 ----
-+
-You'll see: `could not find expected ':'`
 
-. Switch to the *VSCode Editor* tab and fix the file by adding the colon. Replace all the content with:
+. Switch to *VSCode Editor* and fix by adding the colon:
 +
 [source,yaml]
 ----
@@ -330,9 +269,9 @@ You'll see: `could not find expected ':'`
       ansible.builtin.ping:
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and verify:
+. Switch to *Terminal* and verify:
 +
 [source,bash,role=execute]
 ----

@@ -116,24 +116,10 @@ When you encounter a YAML error, follow this process:
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Run yamllint on your inventory:
-+
 [source,bash,role=execute]
 ----
 yamllint inventory.yml
-----
-
-. Run yamllint on your playbook:
-+
-[source,bash,role=execute]
-----
 yamllint site.yml
-----
-
-. Check your playbook with ansible-playbook:
-+
-[source,bash,role=execute]
-----
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 =====
@@ -145,13 +131,7 @@ ansible-playbook --syntax-check -i inventory.yml site.yml
 =====
 NOTE: In the *VSCode Editor* tab
 
-Let's test what you've learned with a deliberately broken playbook that you'll need to fix!
-
-. Create a new file called `debug-challenge.yml`:
-+
-* Click the *New File* icon in the left sidebar
-* Name it `debug-challenge.yml`
-* Add the following content (with multiple errors):
+. Create `debug-challenge.yml` with multiple errors:
 +
 [source,yaml]
 ----
@@ -170,23 +150,16 @@ Let's test what you've learned with a deliberately broken playbook that you'll n
         msg: "Done"
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and find all the errors using yamllint:
+. Switch to *Terminal* and find the errors:
 +
 [source,bash,role=execute]
 ----
 yamllint debug-challenge.yml
 ----
 
-. Can you identify these issues?
-+
-* Indentation wrong on tasks (should be indented 2 spaces)
-* Variable name case mismatch (`Package_Name` vs `package_name`)
-* Missing quotes around `{{ package_name }}`
-* Second task has wrong indentation
-
-. Switch to the *VSCode Editor* tab and fix all the errors. Replace all the content with:
+. Switch to *VSCode Editor* and fix all errors:
 +
 [source,yaml]
 ----
@@ -206,49 +179,21 @@ yamllint debug-challenge.yml
         msg: "Done"
 ----
 +
-IMPORTANT: Save the file.
+. Save the file
 
-. Switch to the *Terminal* tab and verify the fixed version:
+. Switch to *Terminal* and verify it works:
 +
 [source,bash,role=execute]
 ----
 yamllint debug-challenge.yml
 ansible-playbook --syntax-check -i inventory.yml debug-challenge.yml
 ----
-+
-Both commands should complete without errors!
 
-. Run the playbook to see it in action:
+. Run the playbook:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook -i inventory.yml debug-challenge.yml
-----
-+
-.Output should show:
-[source,text]
-----
-PLAY [Debug Challenge] *************************************************
-
-TASK [Gathering Facts] *************************************************
-ok: [web1.example.com]
-ok: [web2.example.com]
-
-TASK [Install package] *************************************************
-changed: [web1.example.com]
-changed: [web2.example.com]
-
-TASK [Another task] ****************************************************
-ok: [web1.example.com] => {
-    "msg": "Done"
-}
-ok: [web2.example.com] => {
-    "msg": "Done"
-}
-
-PLAY RECAP *************************************************************
-web1.example.com           : ok=3    changed=1    unreachable=0    failed=0
-web2.example.com           : ok=3    changed=1    unreachable=0    failed=0
 ----
 =====
 ======
