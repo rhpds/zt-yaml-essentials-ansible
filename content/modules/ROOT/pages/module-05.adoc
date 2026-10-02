@@ -12,94 +12,6 @@ In this module, you will:
 * **FINAL CHALLENGE:** Debug a complex broken playbook with multiple errors
 * Apply everything you've learned to get a broken playbook running
 
-== Debugging Tools
-
-You've been using `yamllint` throughout this lab. Now let's explore its full capabilities and learn how to use it alongside other debugging tools.
-
-=== Tool 1: yamllint - Advanced Usage
-
-You've already used `yamllint` for basic syntax checking. Here are more advanced features:
-
-*Basic usage (you've done this):*
-[source,bash]
-----
-yamllint inventory.yml
-yamllint site.yml
-----
-
-*Show specific error types with parsable format:*
-[source,bash]
-----
-yamllint -f parsable site.yml
-----
-
-*Check multiple files at once:*
-[source,bash]
-----
-yamllint *.yml
-----
-
-[TIP]
-====
-*Understanding yamllint Error Categories:*
-
-* `syntax error` - Invalid YAML that won't parse (MUST FIX)
-* `indentation` - Wrong number of spaces (MUST FIX)
-* `trailing-spaces` - Spaces at end of lines (cosmetic, safe to ignore)
-* `line-length` - Lines too long (cosmetic, safe to ignore)
-* `document-start` - Missing `---` (cosmetic, but best practice to include)
-====
-
-=== Tool 2: ansible-playbook --syntax-check
-
-This checks Ansible-specific syntax beyond basic YAML.
-
-*Usage:*
-[source,bash]
-----
-ansible-playbook --syntax-check -i inventory.yml site.yml
-----
-
-*What it catches:*
-
-* Undefined variables (sometimes)
-* Invalid module names
-* Missing required parameters
-* Incorrect play structure
-
-[NOTE]
-====
-`--syntax-check` only validates syntax, it doesn't run the playbook or check if the logic is correct.
-====
-
-=== Tool 3: ansible-playbook --check
-
-Check mode (dry-run) shows what would happen without making changes.
-
-*Usage:*
-[source,bash]
-----
-ansible-playbook --check -i inventory.yml site.yml
-----
-
-*What it reveals:*
-
-* Undefined variables that only appear at runtime
-* Connection issues
-* Missing inventory hosts
-* Permission problems
-
-[WARNING]
-====
-*Check Mode Limitations:*
-
-Check mode *simulates* changes without making them, which can cause issues:
-
-* ✅ Works: ping, debug, fact gathering
-* ❌ Fails: service tasks when packages aren't installed yet
-
-For playbooks with service tasks (like this lab's examples), use `--syntax-check` for validation instead.
-====
 
 == Troubleshooting Workflow
 
@@ -118,20 +30,6 @@ When you encounter a YAML error, follow this process:
 
 == Hands-On Experience
 
-======
-.☑️ Task 1 - Test debugging tools
-[%collapsible]
-=====
-NOTE: Switch to the *Terminal* tab
-
-[source,bash,role=execute]
-----
-yamllint inventory.yml
-yamllint site.yml
-ansible-playbook --syntax-check -i inventory.yml site.yml
-----
-=====
-======
 
 == 🏆 Final Challenge: Debug the Broken Playbook
 
@@ -140,7 +38,7 @@ You've learned about YAML syntax, playbook structure, variables, and common erro
 In the previous modules, you fixed isolated errors one at a time. But real-world debugging isn't that clean - you often encounter multiple errors in the same file. This final challenge simulates that experience.
 
 ======
-.☑️ Task 2 - Final Debugging Challenge
+.☑️ Task 1 - Final Debugging Challenge
 [%collapsible]
 =====
 The file `debug-challenge.yml` is a broken playbook that contains **MULTIPLE** errors - all the types you've learned in this lab:

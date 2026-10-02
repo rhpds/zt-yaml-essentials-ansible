@@ -4,14 +4,14 @@ echo "Starting module called module-04" >> /tmp/progress.log
 # Create broken1.yml with indentation errors
 cat > /home/rhel/ansible-lab/broken1.yml << 'EOF'
 ---
-- name: Broken indentation example
+- name: Indentation example
   hosts: webservers
   tasks:
-  - name: This task is not properly indented
+  - name: Ping the web servers
     ansible.builtin.ping:
-   - name: This task has wrong indentation
+   - name: Show a message
      ansible.builtin.debug:
-       msg: "Wrong indent"
+       msg: "Indentation matters"
 EOF
 
 echo "Created broken1.yml with indentation errors" >> /tmp/progress.log

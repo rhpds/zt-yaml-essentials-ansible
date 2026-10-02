@@ -4,15 +4,15 @@ set -euo pipefail
 # Task 1 - indentation fixed
 cat > /home/rhel/ansible-lab/broken1.yml << 'EOF'
 ---
-- name: Fixed indentation example
+- name: Indentation example
   hosts: webservers
   tasks:
-    - name: This task is properly indented
+    - name: Ping the web servers
       ansible.builtin.ping:
 
-    - name: This task also has correct indentation
+    - name: Show a message
       ansible.builtin.debug:
-        msg: "Correct indent"
+        msg: "Indentation matters"
 EOF
 
 # Task 2 - case sensitivity fixed

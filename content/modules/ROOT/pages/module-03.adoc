@@ -153,8 +153,7 @@ NOTE: In the *VSCode Editor* tab
 [source,yaml]
 ----
 ---
-# This playbook configures Apache web servers and firewall config
-# Target: webservers group from inventory
+# This is a comment
 
 - name: Configure web servers
   hosts: webservers
@@ -163,31 +162,28 @@ NOTE: In the *VSCode Editor* tab
   vars:
     # Package list includes Apache, SSL module, and firewall
     web_packages:
-      - httpd        # Apache web server
-      - mod_ssl      # SSL/TLS support
-      - firewalld    # Firewall management
+      - httpd   
+      - mod_ssl
+      - firewalld  
 
     web_service: httpd
-    http_port: 80    # Standard HTTP port
+    http_port: 80 
 
   tasks:
-    # Connectivity test
     - name: Ping all web servers
       ansible.builtin.ping:
 
-    # Install all required packages in a single task
     - name: Install web server packages
       ansible.builtin.package:
         name: "{{ item }}"
         state: present
       loop: "{{ web_packages }}"
 
-    # Ensure web service is running and enabled at boot
     - name: Start and enable web service
       ansible.builtin.service:
         name: "{{ web_service }}"
         state: started
-        enabled: true  # Start automatically on system boot
+        enabled: true
 ----
 +
 =====

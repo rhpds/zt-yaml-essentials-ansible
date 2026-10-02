@@ -42,15 +42,15 @@ Notice the indentation errors in the output.
 [source,yaml]
 ----
 ---
-- name: Fixed indentation example
+- name: Indentation example
   hosts: webservers
   tasks:
-    - name: This task is properly indented
+    - name: Ping the web servers
       ansible.builtin.ping:
 
-    - name: This task also has correct indentation
+    - name: Show a message
       ansible.builtin.debug:
-        msg: "Correct indent"
+        msg: "Indentation matters"
 ----
 +
 
