@@ -38,7 +38,7 @@ YAML offers several advantages for automation:
 == Hands-On Experience
 
 ======
-.☑️ Task 1 - Create your first YAML file
+.☑️ Task 1 - Create your first YAML file with scalars
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
@@ -46,16 +46,7 @@ NOTE: In the *VSCode Editor* tab
 . Open the VSCode Editor tab
 . Hover over the `ansible-lab` folder and click the *New File* icon
 . Name it `inventory.yml` and press Enter
-=====
-======
-
-======
-.☑️ Task 2 - Add scalars (simple values)
-[%collapsible]
-=====
-NOTE: In the *VSCode Editor* tab
-
-. Open `inventory.yml` and add the following:
+. Add the following content:
 +
 [source,yaml]
 ----
@@ -70,7 +61,7 @@ db1.example.com
 ======
 
 ======
-.☑️ Task 3 - Verify YAML syntax
+.☑️ Task 2 - Verify YAML syntax
 [%collapsible]
 =====
 NOTE: Switch to the *Terminal* tab
@@ -86,7 +77,7 @@ yamllint inventory.yml
 ======
 
 ======
-.☑️ Task 4 - Use lists (sequences)
+.☑️ Task 3 - Use lists (sequences)
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
@@ -107,7 +98,7 @@ hosts:
 ======
 
 ======
-.☑️ Task 5 - Verify list syntax
+.☑️ Task 4 - Verify list syntax
 [%collapsible]
 =====
 NOTE: Switch to the *Terminal* tab
@@ -120,7 +111,7 @@ yamllint inventory.yml
 ======
 
 ======
-.☑️ Task 6 - Create dictionaries (key-value pairs)
+.☑️ Task 5 - Create dictionaries (key-value pairs)
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
@@ -153,7 +144,7 @@ The `vars:` section applies `ansible_connection: local` to all hosts, running co
 ======
 
 ======
-.☑️ Task 7 - Verify inventory structure
+.☑️ Task 6 - Verify inventory structure
 [%collapsible]
 =====
 NOTE: Switch to the *Terminal* tab
@@ -166,7 +157,7 @@ ansible-inventory -i inventory.yml --list
 ======
 
 ======
-.☑️ Task 8 - Add host variables (case sensitivity)
+.☑️ Task 7 - Add host variables (case sensitivity)
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
@@ -201,7 +192,7 @@ WARNING: YAML is case-sensitive! `http_port` and `HTTP_PORT` are different varia
 ======
 
 ======
-.☑️ Task 9 - Verify inventory and host variables
+.☑️ Task 8 - Verify inventory and host variables
 [%collapsible]
 =====
 NOTE: Switch to the *Terminal* tab

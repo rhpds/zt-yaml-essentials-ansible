@@ -9,16 +9,18 @@ In this module, you will:
 
 * Learn the structure of an Ansible playbook
 * Understand plays, tasks, and modules
-* Write a working playbook with multiple tasks
-* Execute your playbook against the inventory you created
+* Write and run a simple connectivity test
+* Add tasks to install and configure Apache web server
 
-== Ansible Playbook Structure
+== Understanding Playbook Structure
 
-An Ansible playbook consists of one or more *plays*. Each play:
+Before we start writing, let's understand what we're building. An Ansible playbook consists of one or more *plays*. Think of a play as a set of instructions for a specific group of servers.
 
-* Targets a group of hosts from your inventory
-* Contains a list of tasks to execute
-* Can set variables and other play-level options
+Each play has three essential parts:
+
+. *name:* A description of what this play does
+. *hosts:* Which servers from your inventory to target
+. *tasks:* A list of actions to perform
 
 The basic structure looks like this:
 
@@ -43,17 +45,17 @@ The basic structure looks like this:
 * Use fully-qualified collection names (FQCN) for modules: `ansible.builtin.ping` instead of just `ping`
 ====
 
-== Hands-On Experience
+== Creating Your First Playbook
 
-Let's create a simple playbook that tests connectivity to your hosts and then installs a package.
+Let's start simple: we'll create a playbook that tests connectivity to your web servers using the `ping` module.
 
 ======
-.☑️ Task 1 - Create your first playbook
+.☑️ Task 1 - Create a simple playbook
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
 
-. Create a new file called `site.yml`
+. Create a new file called `site.yml` in the `ansible-lab` folder
 . Add the following content:
 +
 [source,yaml]
@@ -67,6 +69,14 @@ NOTE: In the *VSCode Editor* tab
 ----
 +
 . Save the file
+
+Let's break down what this playbook does:
+
+* `---` marks the start of the YAML file
+* `- name:` describes what this play does
+* `hosts: webservers` targets the webservers group from your inventory
+* `tasks:` begins the list of tasks to execute
+* `ansible.builtin.ping:` uses the ping module to test connectivity
 =====
 ======
 
@@ -76,45 +86,98 @@ NOTE: In the *VSCode Editor* tab
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Validate the syntax:
+. First, validate the syntax:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
++
+This checks your YAML syntax without running anything.
 
-. Run the playbook:
+. Now run the playbook:
 +
 [source,bash,role=execute]
 ----
 ansible-playbook -i inventory.yml site.yml
 ----
++
+You should see output showing successful pings to both web servers!
 =====
 ======
 
-== Adding More Tasks
+== Understanding Modules and Parameters
 
-Let's expand the playbook to install Apache web server on the web servers.
+Great! Your playbook works. Now let's understand how to do more with it.
 
-=== Understanding Module Parameters
+=== What Are Modules?
 
-Ansible modules accept parameters as key-value pairs. The `ansible.builtin.package` module needs to know which package to install:
+Modules are the building blocks of Ansible automation. Each module performs a specific task:
+
+* `ansible.builtin.ping` - Tests connectivity
+* `ansible.builtin.package` - Installs/removes packages
+* `ansible.builtin.service` - Manages services (start, stop, enable)
+* `ansible.builtin.file` - Manages files and directories
+
+=== Module Parameters
+
+Most modules need parameters to know what to do. Parameters are written as key-value pairs under the module name:
 
 [source,yaml]
 ----
 ansible.builtin.package:
-  name: httpd
-  state: present
+  name: httpd          # Which package to install
+  state: present       # present = installed, absent = removed
+----
+
+[source,yaml]
+----
+ansible.builtin.service:
+  name: httpd          # Which service to manage
+  state: started       # started, stopped, or restarted
+  enabled: true        # Start on boot (true/false)
+----
+
+[TIP]
+====
+To see all parameters for any module, use:
+
+[source,bash]
+----
+ansible-doc ansible.builtin.package
+----
+====
+
+== Building a Real Automation
+
+Now let's expand your playbook to actually do something useful: install and configure Apache web server.
+
+=== Understanding Privilege Escalation
+
+Installing packages and managing services requires administrator privileges. In Ansible, we use `become: true` to run tasks with elevated permissions (like using `sudo`).
+
+=== Boolean Values in YAML
+
+You'll see several boolean (true/false) values in our playbook:
+
+* Use `true` and `false` (lowercase)
+* Ansible also accepts `yes`/`no`, but `true`/`false` is the standard
+
+[source,yaml]
+----
+become: true         # ✅ Recommended
+enabled: true        # ✅ Recommended
+become: yes          # ✅ Works, but not preferred
 ----
 
 ======
-.☑️ Task 3 - Add Apache installation tasks
+.☑️ Task 3 - Add Apache installation and configuration
 [%collapsible]
 =====
 NOTE: In the *VSCode Editor* tab
 
-. Replace `site.yml` with:
-+
+Now let's expand your playbook to install Apache. Update your `site.yml` file to match this:
+
 [source,yaml]
 ----
 ---
@@ -136,18 +199,25 @@ NOTE: In the *VSCode Editor* tab
         state: started
         enabled: true
 ----
-+
-. Save the file
+
+What changed?
+
+* Added `become: true` to run tasks with admin privileges
+* Kept the ping task to verify connectivity first
+* Added a task to install the `httpd` package
+* Added a task to start Apache and enable it to run on boot
+
+Save the file when you're done.
 =====
 ======
 
 ======
-.☑️ Task 4 - Verify and run the updated playbook
+.☑️ Task 4 - Run the updated playbook
 [%collapsible]
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Verify the syntax:
+. First, validate the syntax:
 +
 [source,bash,role=execute]
 ----
@@ -160,66 +230,19 @@ ansible-playbook --syntax-check -i inventory.yml site.yml
 ----
 ansible-playbook -i inventory.yml site.yml
 ----
++
+Watch as Ansible executes each task in order:
+
+. ✅ Pings the web servers
+. ✅ Installs Apache (httpd package)
+. ✅ Starts and enables the Apache service
+
+[NOTE]
+====
+If any task fails, Ansible stops executing on that host. This prevents partial configurations that could cause problems.
+====
 =====
 ======
-
-=== Understanding Task Execution
-
-Tasks in a playbook execute in order, top to bottom:
-
-. First task: `ping` - Tests connectivity
-. Second task: `package` - Installs httpd
-. Third task: `service` - Starts and enables httpd
-
-If any task fails, the playbook stops executing on that host.
-
-=== Boolean Values in YAML
-
-Notice `become: true` in the playbook. YAML supports boolean values:
-
-* Use `true` and `false` (lowercase)
-* Ansible also accepts `yes`/`no` for booleans, but `true`/`false` is preferred
-
-[source,yaml]
-----
-become: true         # ✅ Preferred
-become: yes          # ✅ Works, but not preferred
-become: True         # ❌ Avoid - case inconsistent
-enabled: true        # ✅ Correct
-----
-
-=== Module Parameters
-
-Different Ansible modules accept different parameters. Let's look at the parameters we've used:
-
-==== `ansible.builtin.package` Module
-
-[source,yaml]
-----
-ansible.builtin.package:
-  name: httpd          # Package name (string)
-  state: present       # Desired state: present, absent, latest
-----
-
-==== `ansible.builtin.service` Module
-
-[source,yaml]
-----
-ansible.builtin.service:
-  name: httpd          # Service name (string)
-  state: started       # Desired state: started, stopped, restarted
-  enabled: true        # Enable on boot (boolean)
-----
-
-[TIP]
-====
-To see all parameters for a module, use:
-
-[source,bash]
-----
-ansible-doc ansible.builtin.package
-----
-====
 
 ======
 .☑️ Task 5 - Verify Apache is running
@@ -227,12 +250,14 @@ ansible-doc ansible.builtin.package
 =====
 NOTE: Switch to the *Terminal* tab
 
-. Check that Apache is running:
-+
+Let's confirm Apache is actually running:
+
 [source,bash,role=execute]
 ----
 curl http://localhost
 ----
+
+You should see Apache's default HTML page! This confirms your playbook successfully installed and started the web server.
 =====
 ======
 
@@ -240,24 +265,27 @@ curl http://localhost
 
 In this module, you learned:
 
-* ✅ Playbooks start with `---` and contain plays (lists)
-* ✅ Plays have `name`, `hosts`, and `tasks` sections
+* ✅ Playbooks start with `---` and contain one or more plays
+* ✅ Each play targets specific hosts and contains a list of tasks
 * ✅ Tasks execute in order from top to bottom
-* ✅ Use `become: true` for privilege escalation
-* ✅ Module parameters are indented under the module name
-* ✅ Use `true`/`false` for boolean values
-* ✅ Always use `--syntax-check` to validate YAML
-* ✅ Use FQCN (Fully Qualified Collection Names) for modules
+* ✅ Modules are the building blocks that perform actual work
+* ✅ Module parameters are key-value pairs that tell modules what to do
+* ✅ Use `become: true` to run tasks with administrator privileges
+* ✅ Use `true`/`false` for boolean values in YAML
+* ✅ Always validate syntax with `--syntax-check` before running
+* ✅ Use FQCN (Fully Qualified Collection Names) like `ansible.builtin.ping`
 
-You've created a working Ansible playbook that installs and configures Apache! In the next module, you'll learn how to use variables to make your playbooks more flexible and maintainable.
+You've created a working Ansible playbook that installs and configures Apache web server! In the next module, you'll learn how to use variables to make your playbooks more flexible and reusable.
 
 == Embracing the Next Challenge
 
-Once you've completed the tasks above, proceed to the next module to learn about Ansible variables.
+You've just automated the installation and configuration of a web server with just a few lines of YAML! Before moving to the next module:
 
-* Review your playbook structure and ensure all tasks completed successfully
-* Make sure Apache is installed and running on your web servers
-* Take a moment to understand how the YAML structure translates to Ansible actions
+* Review how the YAML structure creates a clear, readable automation workflow
+* Notice how each task builds on the previous one
+* Think about how you could adapt this playbook for different packages or services
+
+In the next module, you'll learn how variables can make this playbook even more flexible and reusable.
 
 == Encountered an issue?
 
